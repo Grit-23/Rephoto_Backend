@@ -1,0 +1,33 @@
+spring:
+  config:
+    import: application-secret.yml
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/rephoto_db?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: rephoto_user
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  sql:
+    init:
+      encoding: UTF-8
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        globally_quoted_identifiers: true
+        globally_quoted_identifiers_skip_column_definitions: true
+    show-sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace

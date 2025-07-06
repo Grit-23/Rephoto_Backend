@@ -1,12 +1,14 @@
 package com.rephoto.rephoto_api.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -19,7 +21,7 @@ public class User {
     @Column(length = 20, nullable = false)
     String loginId;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 70, nullable = false)
     String password;
 
 }

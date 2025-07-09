@@ -2,6 +2,8 @@ package com.rephoto.rephoto_api.service;
 
 import com.rephoto.rephoto_api.domain.User;
 import com.rephoto.rephoto_api.dto.JoinRequestDto;
+import com.rephoto.rephoto_api.exception.CustomException;
+import com.rephoto.rephoto_api.exception.ErrorCode;
 import com.rephoto.rephoto_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +18,7 @@ public class JoinService {
 
     public void join(JoinRequestDto requestDto) {
         if (userRepository.existsByLoginId(requestDto.getLoginId())) {
-            throw new IllegalArgumentException("이미 존재하는 로그인 아이디입니다.");
+            throw new CustomException(ErrorCode.DUPLICATE_LOGIN_ID);
         }
 
         User user = User.builder()

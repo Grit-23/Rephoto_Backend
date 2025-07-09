@@ -1,5 +1,7 @@
 package com.rephoto.rephoto_api.jwt;
 
+import com.rephoto.rephoto_api.exception.CustomException;
+import com.rephoto.rephoto_api.exception.ErrorCode;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -44,8 +46,8 @@ public class JwtUtil {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (JwtException e) {
-            return false;
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.JWT_TOKEN_INVALID);
         }
     }
 }

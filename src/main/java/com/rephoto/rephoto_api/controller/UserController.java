@@ -8,6 +8,7 @@ import com.rephoto.rephoto_api.exception.ErrorCode;
 import com.rephoto.rephoto_api.repository.UserRepository;
 import com.rephoto.rephoto_api.security.UserDetailsImpl;
 import com.rephoto.rephoto_api.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
+@Tag(name = "회원 API", description = "회원 정보 조회, 정보 수정, 탈퇴 기능")
 @RequiredArgsConstructor
 public class UserController {
 

@@ -1,10 +1,14 @@
 package com.rephoto.rephoto_api.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@IdClass(PhotoAlbumId.class)
-public class Photo_album_map {
+@Getter
+@Setter
+
+public class PhotoAlbum {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)

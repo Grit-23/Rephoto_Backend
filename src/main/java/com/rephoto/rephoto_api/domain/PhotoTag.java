@@ -9,7 +9,10 @@ import lombok.Setter;
 @Setter
 @Table(name = "Photo_tag_map")
 
-public class Photo_tag_map {
+public class PhotoTag {
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long photoTagId;
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "photo_id", nullable = false)

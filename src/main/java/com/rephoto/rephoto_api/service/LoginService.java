@@ -21,21 +21,37 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    //로그인
+    // 로그인
     public String login(LoginRequestDto request) {
-        User user = userRepository.findByLoginId(request.getLoginId())
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        try {
+            // 1. 로그인 ID로 사용자 조회
+            User user = userRepository.findByLoginId(request.getLoginId())
+                    .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PASSWORD)); // 존재하지 않아도 같은 에러
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new CustomException(ErrorCode.INVALID_PASSWORD);
+            // 2. 비밀번호 일치 여부 확인
+            if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                throw new CustomException(ErrorCode.INVALID_PASSWORD);
+            }
+
+            // 3. 토큰 발급
+            return jwtUtil.createToken(user.getLoginId());
+
+        } catch (CustomException e) {
+            throw e; // 위에서 직접 발생시킨 CustomException은 그대로 전달
+        } catch (Exception e) {
+            // 예상치 못한 서버 오류
+            throw new CustomException(ErrorCode.LOGIN_FAILED);
         }
-
-        return jwtUtil.createToken(user.getLoginId());
     }
 
-    //로그아웃
+    // 로그아웃
     public Map<String, String> logout() {
-        // JWT는 상태를 저장하지 않기 때문에 서버 측 로그아웃은 프론트가 토큰 삭제해야 함
-        return Map.of("message", "로그아웃 되었습니다. (클라이언트 측에서 토큰 삭제 필요)");
+        try {
+            // 로그아웃 시 클라이언트 측에서 토큰 삭제
+            return Map.of("message", "로그아웃 되었습니다. (클라이언트 측에서 토큰 삭제 필요)");
+        } catch (Exception e) {
+            // 서버 오류 발생 시
+            throw new CustomException(ErrorCode.LOGOUT_FAILED);
+        }
     }
 }

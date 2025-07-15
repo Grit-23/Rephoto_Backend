@@ -17,16 +17,22 @@ public class JoinService {
     private final PasswordEncoder passwordEncoder;
 
     public void join(JoinRequestDto requestDto) {
-        if (userRepository.existsByLoginId(requestDto.getLoginId())) {
-            throw new CustomException(ErrorCode.DUPLICATE_LOGIN_ID);
+        try {
+            if (userRepository.existsByLoginId(requestDto.getLoginId())) {
+                throw new CustomException(ErrorCode.DUPLICATE_LOGIN_ID);
+            }
+
+            User user = User.builder()
+                    .loginId(requestDto.getLoginId())
+                    .password(passwordEncoder.encode(requestDto.getPassword()))
+                    .username(requestDto.getUsername())
+                    .build();
+
+            userRepository.save(user);
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.JOIN_FAILED); // 서버 예외
         }
-
-        User user = User.builder()
-                .loginId(requestDto.getLoginId())
-                .password(passwordEncoder.encode(requestDto.getPassword()))
-                .username(requestDto.getUsername())
-                .build();
-
-        userRepository.save(user);
     }
 }

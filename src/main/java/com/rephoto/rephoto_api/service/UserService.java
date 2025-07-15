@@ -60,12 +60,20 @@ public class UserService {
             throw new CustomException(ErrorCode.UNAUTHORIZED_UPDATE_ACCESS);
         }
 
-        if (requestDto.getPassword() != null && !requestDto.getPassword().isBlank()) {
-            user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        String password = requestDto.getPassword();
+        String username = requestDto.getUsername();
+
+        if ((password != null && password.isBlank()) || (username != null && username.isBlank())) {
+            throw new CustomException(ErrorCode.UPDATE_INFO_INVALID);
         }
 
-        if (requestDto.getUsername() != null && !requestDto.getUsername().isBlank()) {
-            user.setUsername(requestDto.getUsername());
+        // 실제 값이 null이 아니고 비어 있지 않다면 수정
+        if (password != null) {
+            user.setPassword(passwordEncoder.encode(password));
+        }
+
+        if (username != null) {
+            user.setUsername(username);
         }
 
         userRepository.save(user);

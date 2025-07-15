@@ -24,7 +24,7 @@ public class LogoutController {
 
     private final LoginService loginService;
 
-    @Operation(summary = "로그아웃", description = "클라이언트 측에서 JWT 토큰을 삭제")
+    @Operation(summary = "로그아웃", description = "클라이언트 측에서 JWT 토큰 삭제")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류 (로그아웃 처리 실패)",

@@ -28,7 +28,7 @@ public class JoinController {
 
     private final JoinService joinService;
 
-    @Operation(summary = "회원가입", description = "회원 정보를 입력받아 새로운 계정을 생성합니다.")
+    @Operation(summary = "회원가입", description = "회원 정보를 입력받아 새로운 계정 생성")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원가입 성공"),
             @ApiResponse(responseCode = "409", description = "중복된 로그인 ID",

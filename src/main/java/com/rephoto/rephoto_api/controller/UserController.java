@@ -34,7 +34,7 @@ public class UserController {
     private final UserService userService;
 
     // 회원 정보 조회
-    @Operation(summary = "회원 정보 조회", description = "userId로 회원 정보를 조회합니다. 현재 로그인한 사용자 본인만 조회할 수 있습니다.")
+    @Operation(summary = "회원 정보 조회", description = "userId로 회원 정보 조회. 현재 로그인한 사용자 본인만 조회 가능.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공"),
             @ApiResponse(responseCode = "401", description = "접근 권한 없음",

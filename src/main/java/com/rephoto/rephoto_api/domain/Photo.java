@@ -24,6 +24,8 @@ public class Photo {
     @Column(nullable = true)
     private double longitude;
 
+    private String imageUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

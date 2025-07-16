@@ -28,6 +28,18 @@ public enum ErrorCode {
     JWT_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 JWT 토큰입니다."),
     JWT_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "유효하지 않은 JWT 토큰입니다."),
 
+    // AWS S3 관련
+    FILE_EMPTY(HttpStatus.BAD_REQUEST, "파일이 비어 있습니다."),
+    FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "파일 크기가 500MB를 초과합니다."),
+    UNSUPPORTED_IMAGE_TYPE(HttpStatus.BAD_REQUEST, "지원하지 않는 이미지 형식입니다."),
+    FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드 중 오류가 발생했습니다."),
+
+    //지도
+    MAP_PARAMS_REQUIRED(HttpStatus.BAD_REQUEST, "위도, 경도 값은 필수입니다."),
+    INVALID_COORDINATE_FORMAT(HttpStatus.BAD_REQUEST, "올바른 좌표 형식을 입력해주세요."),
+    PHOTO_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 사진을 찾을 수 없습니다."),
+    IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "이미지를 찾을 수 없습니다."),
+
     // Kakao 관련 오류
     KAKAO_AUTH_FAILED(HttpStatus.UNAUTHORIZED, "카카오 인증에 실패했습니다.");
 

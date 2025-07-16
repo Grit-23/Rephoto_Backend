@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### S3 secret key ###
+src/main/resources/application-secret.yml

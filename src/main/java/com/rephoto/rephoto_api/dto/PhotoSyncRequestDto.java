@@ -1,10 +1,10 @@
-package com.rephoto.rephoto_api.dto.request;
+package com.rephoto.rephoto_api.dto;
 
 import lombok.Data;
 import java.util.List;
 
 @Data
-public class PhotoSyncRequest {
+public class PhotoSyncRequestDto {
     private Long userId;
     private List<PhotoMetadata> newPhotos;
 

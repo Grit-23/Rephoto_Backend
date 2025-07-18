@@ -35,3 +35,9 @@ logging:
 jwt:
   secret: bXlfanl3dF9zZWNyZXQ=
   expiration: 3600000
+
+kakao:
+  client-id: a7991882d9688bd3f0fb4a14d11f1044
+  redirect-uri: http://localhost:8080/callback
+  token-uri: https://kauth.kakao.com/oauth/token
+  user-info-uri: https://kapi.kakao.com/v2/user/me

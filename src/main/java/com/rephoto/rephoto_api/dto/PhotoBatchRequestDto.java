@@ -1,10 +1,10 @@
-package com.rephoto.rephoto_api.dto.request;
+package com.rephoto.rephoto_api.dto;
 
 import lombok.Data;
 import java.util.List;
 
 @Data
-public class PhotoBatchRequest {
+public class PhotoBatchRequestDto {
     private Long userId;
     private List<PhotoMetadata> photos;
 

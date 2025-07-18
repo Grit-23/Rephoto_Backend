@@ -3,6 +3,7 @@ package com.rephoto.rephoto_api.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -19,10 +20,10 @@ public class Photo {
     private boolean isPrivate;
 
     @Column(nullable = true)
-    private double latitude;
+    private Double latitude;
 
     @Column(nullable = true)
-    private double longitude;
+    private Double longitude;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -31,5 +32,7 @@ public class Photo {
     @Column(nullable = false, unique = true)
     private String hash;
 
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 
 }

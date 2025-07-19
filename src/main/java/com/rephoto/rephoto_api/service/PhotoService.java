@@ -41,7 +41,7 @@ public class PhotoService {
     }
 
     public List<PhotoListDto> getWarningPhotos(Long userId) {
-
+        return null; //임시
     }
 
 }

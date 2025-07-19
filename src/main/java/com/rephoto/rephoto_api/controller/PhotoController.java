@@ -36,12 +36,12 @@ public class PhotoController {
 
     @GetMapping("/{photo_id}")
     public ResponseEntity<?> PhotoDetail(@PathVariable("user_id") Long userId, @PathVariable Long photo_id){
-
+        return null; //임시
     }
 
-    @DeleteMapping("/{photo_id")
+    @DeleteMapping("/{photo_id}")
     public ResponseEntity<?> PhotoDelete(@PathVariable("user_id") Long userId, @PathVariable Long photo_id){
-
+        return null; //임시
     }
 
     @GetMapping("")

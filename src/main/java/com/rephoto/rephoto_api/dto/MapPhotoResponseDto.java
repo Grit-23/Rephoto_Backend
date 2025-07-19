@@ -15,18 +15,18 @@ import java.util.List;
 public class MapPhotoResponseDto {
 
     @Schema(description = "사용자의 현재 위치 정보")
-    private Center center;
+    private CenterDto center;
 
     @Schema(description = "조회된 사진 수", example = "5")
     private int photoCount;
 
     @Schema(description = "조회된 사진 리스트")
-    private List<PhotoList> photos;
+    private List<PhotoListDto> photos;
 
     @Getter
     @AllArgsConstructor
     @Schema(description = "중심 좌표(사용자의 현위치)와 반경 정보")
-    public static class Center {
+    public static class CenterDto {
 
         @Schema(description = "위도", example = "37.5665")
         private double lat;
@@ -42,7 +42,7 @@ public class MapPhotoResponseDto {
     @Builder
     @AllArgsConstructor
     @Schema(description = "사진 항목 정보")
-    public static class PhotoList {
+    public static class PhotoListDto {
 
         @Schema(description = "사진 ID", example = "22")
         private Long photoId;

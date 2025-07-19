@@ -34,7 +34,7 @@ public enum ErrorCode {
     UNSUPPORTED_IMAGE_TYPE(HttpStatus.BAD_REQUEST, "지원하지 않는 이미지 형식입니다."),
     FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드 중 오류가 발생했습니다."),
 
-    //지도
+    // 지도
     MAP_PARAMS_REQUIRED(HttpStatus.BAD_REQUEST, "위도, 경도 값은 필수입니다."),
     INVALID_COORDINATE_FORMAT(HttpStatus.BAD_REQUEST, "올바른 좌표 형식을 입력해주세요."),
     PHOTO_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 사진을 찾을 수 없습니다."),

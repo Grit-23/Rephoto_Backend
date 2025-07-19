@@ -7,12 +7,12 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "Detail")
+@Table(name = "Description")
 
 public class Detail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long detailId;
+    Long descriptionId;
 
     @Column(length = 2000, nullable = false)
     String description;

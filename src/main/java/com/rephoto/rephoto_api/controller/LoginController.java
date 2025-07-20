@@ -27,8 +27,8 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/users")
-@Tag(name = "로그인 API", description = "로그인 관련 기능")
+@RequestMapping("/api/login")
+@Tag(name = "로그인 API", description = "사용자 로그인 수행")
 public class LoginController {
 
     private final UserRepository userRepository;
@@ -37,7 +37,7 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    @PostMapping("/login")
+    @PostMapping
     @Operation(summary = "로그인", description = "로그인 후 JWT 토큰을 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "로그인 성공"),

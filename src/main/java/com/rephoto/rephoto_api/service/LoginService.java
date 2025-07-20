@@ -33,25 +33,41 @@ public class LoginService {
                 throw new CustomException(ErrorCode.INVALID_PASSWORD);
             }
 
-            // 3. 토큰 발급
+            // 3. 로그인 상태 true로 설정
+            user.setLoggedIn(true);
+            userRepository.save(user);
+
+            // 4. 토큰 발급
             return jwtUtil.createToken(user.getLoginId());
 
         } catch (CustomException e) {
-            throw e; // 위에서 직접 발생시킨 CustomException은 그대로 전달
+            throw e;
         } catch (Exception e) {
-            // 예상치 못한 서버 오류
-            throw new CustomException(ErrorCode.LOGIN_FAILED);
+            throw e; // 500 에러 처리
         }
     }
 
     // 로그아웃
-    public Map<String, String> logout() {
+    public void logout(Long userId, String loginIdFromToken) {
         try {
-            // 로그아웃 시 클라이언트 측에서 토큰 삭제
-            return Map.of("message", "로그아웃 되었습니다. (클라이언트 측에서 토큰 삭제 필요)");
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+            if (!user.getLoginId().equals(loginIdFromToken)) {
+                throw new CustomException(ErrorCode.UNAUTHORIZED_USER_ACCESS);
+            }
+
+            if (!user.isLoggedIn()) {
+                throw new CustomException(ErrorCode.ALREADY_LOGGED_OUT);
+            }
+
+            user.setLoggedIn(false);
+            userRepository.save(user);
+
+        } catch (CustomException e) {
+            throw e; // 커스텀 예외는 그대로 전파
         } catch (Exception e) {
-            // 서버 오류 발생 시
-            throw new CustomException(ErrorCode.LOGOUT_FAILED);
+            throw new RuntimeException(e); // 500 에러 처리
         }
     }
 }

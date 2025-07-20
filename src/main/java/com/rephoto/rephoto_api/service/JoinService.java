@@ -32,7 +32,7 @@ public class JoinService {
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {
-            throw new CustomException(ErrorCode.JOIN_FAILED); // 서버 예외
+            throw new RuntimeException(e);
         }
     }
 }

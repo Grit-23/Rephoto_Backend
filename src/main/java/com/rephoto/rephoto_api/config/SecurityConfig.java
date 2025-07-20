@@ -26,8 +26,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/join",
-                                "/api/users/login",
+                        .requestMatchers("/api/join",
+                                "/api/login",
                                 "/api/kakao/login",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",

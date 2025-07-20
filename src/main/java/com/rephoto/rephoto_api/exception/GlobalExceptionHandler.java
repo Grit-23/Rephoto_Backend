@@ -1,5 +1,6 @@
 package com.rephoto.rephoto_api.exception;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -9,11 +10,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
-        ErrorCode code = ex.getErrorCode();
         return ResponseEntity
-                .status(code.getHttpStatus())
-                .body(new ErrorResponse(code.getHttpStatus().value(), code.getMessage()));
+                .status(ex.getErrorCode().getHttpStatus())
+                .body(ErrorResponse.of(ex.getErrorCode()));
     }
 
-    // 필요하다면 기타 예외 처리도 여기에 추가 가능
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+        // INTERNAL_SERVER_ERROR 500 모두 처리
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(500, "서버 내부 오류가 발생했습니다."));
+    }
 }

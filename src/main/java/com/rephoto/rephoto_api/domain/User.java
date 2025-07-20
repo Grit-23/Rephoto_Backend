@@ -24,4 +24,7 @@ public class User {
     @Column(length = 70, nullable = false)
     String password;
 
+    @Column(nullable = false)
+    private boolean isLoggedIn; // 로그인 상태 여부 확인용
+
 }

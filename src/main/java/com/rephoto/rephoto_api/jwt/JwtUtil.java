@@ -18,6 +18,7 @@ public class JwtUtil {
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
 
     private SecretKey getSigningKey() {
+
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes()); // Base64 필요 없음, 자동 처리
     }
 
@@ -49,5 +50,12 @@ public class JwtUtil {
         } catch (Exception e) {
             throw new CustomException(ErrorCode.JWT_TOKEN_INVALID);
         }
+    }
+
+    public String resolveToken(String bearerToken) {
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7); // "Bearer " 제거
+        }
+        throw new CustomException(ErrorCode.JWT_TOKEN_INVALID);
     }
 }

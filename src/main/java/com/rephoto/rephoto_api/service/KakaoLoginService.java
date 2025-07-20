@@ -48,10 +48,11 @@ public class KakaoLoginService {
 
             String token = jwtUtil.createToken(user.getLoginId());
             return new LoginResponseDto(token);
+
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {
-            throw new CustomException(ErrorCode.LOGIN_FAILED);
+            throw new RuntimeException(e);
         }
     }
 }

@@ -39,18 +39,8 @@ public class KakaoLoginController {
             @ApiResponse(responseCode = "500", description = "서버 오류 (로그인 처리 실패)",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public ResponseEntity<?> kakaoLogin(@RequestBody KakaoLoginRequestDto request) {
-        try {
-            LoginResponseDto response = kakaoLoginService.kakaoLogin(request);
-            return ResponseEntity.ok(response);
-        } catch (CustomException e) {
-            return ResponseEntity
-                    .status(e.getErrorCode().getHttpStatus())
-                    .body(Map.of("error", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "알 수 없는 오류로 로그인에 실패했습니다."));
-        }
+    public ResponseEntity<LoginResponseDto> kakaoLogin(@RequestBody KakaoLoginRequestDto request) {
+        LoginResponseDto response = kakaoLoginService.kakaoLogin(request);
+        return ResponseEntity.ok(response);
     }
 }

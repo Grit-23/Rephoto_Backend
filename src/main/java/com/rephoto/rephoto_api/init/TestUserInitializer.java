@@ -8,6 +8,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+//테스트용 임시 사용자 추가 코드
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ public class TestUserInitializer implements CommandLineRunner{
                     .username("테스트유저")
                     .loginId("test_user_id")
                     .password(passwordEncoder.encode("testpassword00"))
+                    .isLoggedIn(false)
                     .build();
 
             userRepository.save(testUser);

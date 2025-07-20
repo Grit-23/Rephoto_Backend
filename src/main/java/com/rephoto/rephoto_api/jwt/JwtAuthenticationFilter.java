@@ -34,36 +34,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
+        try {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
 
-            try {
                 if (jwtUtil.validateToken(token)) {
                     String loginId = jwtUtil.getLoginIdFromToken(token);
                     User user = userRepository.findByLoginId(loginId)
                             .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-                    // SecurityContext에 인증 정보 설정
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
-            } catch (CustomException ex) {
-                response.setStatus(ex.getErrorCode().getHttpStatus().value());
-                response.setContentType("application/json;charset=UTF-8");
-                response.getWriter().write("{\"error\": \"" + ex.getMessage() + "\"}");
-                return;
             }
-        }
 
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
+
+        } catch (CustomException ex) {
+            //JSON 응답 전달
+            sendErrorResponse(response, ex.getErrorCode());
+        }
     }
 
-    private String resolveToken(HttpServletRequest request) {
-        String bearer = request.getHeader("Authorization");
-        if (bearer != null && bearer.startsWith("Bearer ")) {
-            return bearer.substring(7);
-        }
-        return null;
+    private void sendErrorResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
+        response.setStatus(errorCode.getHttpStatus().value());
+        response.setContentType("application/json;charset=UTF-8");
+
+        String body = String.format("{\"status\": %d, \"error\": \"%s\"}",
+                errorCode.getHttpStatus().value(),
+                errorCode.getMessage());
+
+        response.getWriter().write(body);
     }
 }

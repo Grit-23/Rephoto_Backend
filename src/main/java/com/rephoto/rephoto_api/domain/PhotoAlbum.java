@@ -7,18 +7,21 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-
+@Table(name = "photo_album")
 public class PhotoAlbum {
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long photoAlbumId;
 
-    @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id", nullable = false)
-    private Tag tag;
+    @JoinColumns({
+            @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+            @JoinColumn(name = "tag_id", referencedColumnName = "tag_id")
+    })
+    private Album album;
 
-    // other fields...
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "photo_id", nullable = false)
+    private Photo photo;
 }

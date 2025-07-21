@@ -21,9 +21,9 @@ public class AlbumController {
     private final AlbumRepository albumRepository;
     private final PhotoService photoService;
 
-    @GetMapping("/{user_id}")
-    public List<Album> AlbumList(@PathVariable Long user_id) {
-        return albumService.getAllAlbums(user_id);
+    @GetMapping("/{userId}")
+    public List<Album> AlbumList(@PathVariable Long userId) {
+        return albumService.getAllAlbums(userId);
     }
 
     @GetMapping("")

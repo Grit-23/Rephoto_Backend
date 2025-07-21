@@ -36,8 +36,9 @@ public class PhotoController {
     }
 
     @GetMapping("/{photo_id}")
-    public Photo PhotoDetail(@PathVariable("user_id") Long userId, @PathVariable Long photo_id){
-        return photoService.getPhoto(userId, photo_id);
+    public ResponseEntity<PhotoDto> PhotoDetail(@PathVariable("user_id") Long userId, @PathVariable Long photo_id){
+        PhotoDto photoDto =  photoService.getPhoto(userId, photo_id);
+        return ResponseEntity.ok(photoDto);
     }
 
     @DeleteMapping("/{photo_id}")
@@ -46,13 +47,15 @@ public class PhotoController {
     }
 
     @GetMapping("")
-    public List<PhotoDto> PhotoList(@PathVariable("user_id") Long userId){
-        return photoService.getAllPhotos(userId);
+    public ResponseEntity<List<PhotoDto>> PhotoList(@PathVariable("user_id") Long userId){
+        List<PhotoDto> photoDtos = photoService.getAllPhotos(userId);
+        return ResponseEntity.ok(photoDtos);
     }
 
     @GetMapping("/warning")
-    public List<PhotoDto> PhotoWarning(@PathVariable("user_id") Long userId){
-        return photoService.getWarningPhotos(userId);
+    public ResponseEntity<List<PhotoDto>> PhotoWarning(@PathVariable("user_id") Long userId){
+        List<PhotoDto> photoDtos = photoService.getWarningPhotos(userId);
+        return ResponseEntity.ok(photoDtos);
        // return ResponseEntity.ok("민감한 사진 리스트 전달 완료");
     }
 }

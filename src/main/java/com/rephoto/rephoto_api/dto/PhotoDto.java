@@ -1,10 +1,8 @@
 package com.rephoto.rephoto_api.dto;
 
-import com.rephoto.rephoto_api.domain.Photo;
-
 import java.time.LocalDateTime;
-import java.util.List;
 
+import com.rephoto.rephoto_api.domain.Photo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,11 +11,19 @@ import lombok.Setter;
 @Setter
 @Builder
 
-public class PhotoListDto {
+public class PhotoDto {
     private Long photoId;
     private String imageUrl;
     private boolean isPrivate;
     private Double latitude;
     private Double longitude;
     private LocalDateTime createdAt;
+
+    public static PhotoDto fromEntity(Photo photo) {
+        return PhotoDto.builder()
+                .photoId(photo.getPhotoId())
+                .imageUrl(photo.getImageUrl())
+                .isPrivate(photo.isPrivate())
+                .build();
+    }
 }

@@ -10,7 +10,9 @@ public class PhotoSyncRequestDto {
 
     @Data
     public static class PhotoMetadata {
-        private String filename;
+        private Double latitude;
+        private Double longitude;
+        private String imageUrl;
         private String createdAt;
         private String hash;
     }

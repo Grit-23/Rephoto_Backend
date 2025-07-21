@@ -6,13 +6,13 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class AlbumDto {
+public class AlbumResponseDto {
     private Long userId;
     private Long tagId;
     private String tagName;
 
-    public static AlbumDto fromEntity(Album album) {
-        return AlbumDto.builder()
+    public static AlbumResponseDto fromEntity(Album album) {
+        return AlbumResponseDto.builder()
                 .userId(album.getUser().getUserId())
                 .tagId(album.getTag().getTagId())
                 .tagName(album.getTag().getTagName())

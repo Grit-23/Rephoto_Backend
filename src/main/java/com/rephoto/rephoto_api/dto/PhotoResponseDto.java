@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Builder
 
-public class PhotoDto {
+public class PhotoResponseDto {
     private Long photoId;
     private String imageUrl;
     private boolean isPrivate;
@@ -19,8 +19,8 @@ public class PhotoDto {
     private Double longitude;
     private LocalDateTime createdAt;
 
-    public static PhotoDto fromEntity(Photo photo) {
-        return PhotoDto.builder()
+    public static PhotoResponseDto fromEntity(Photo photo) {
+        return PhotoResponseDto.builder()
                 .photoId(photo.getPhotoId())
                 .imageUrl(photo.getImageUrl())
                 .isPrivate(photo.isPrivate())

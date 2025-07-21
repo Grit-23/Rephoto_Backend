@@ -10,8 +10,10 @@ public class PhotoBatchRequestDto {
 
     @Data
     public static class PhotoMetadata {
-        private String filename;
+        private Double latitude;
+        private Double longitude;
+        private String imageUrl;
         private String createdAt;
-        private String hash;  // 파일 해시값
+        private String hash;
     }
 }

@@ -1,7 +1,6 @@
 package com.rephoto.rephoto_api.controller;
 
-import com.rephoto.rephoto_api.domain.Photo;
-import com.rephoto.rephoto_api.dto.PhotoDto;
+import com.rephoto.rephoto_api.dto.PhotoResponseDto;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
 import com.rephoto.rephoto_api.service.PhotoService;
 import com.rephoto.rephoto_api.dto.PhotoBatchRequestDto;
@@ -9,8 +8,6 @@ import com.rephoto.rephoto_api.dto.PhotoSyncRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.rephoto.rephoto_api.exception.CustomException;
-import com.rephoto.rephoto_api.exception.ErrorCode;
 
 import java.util.List;
 
@@ -25,7 +22,7 @@ public class PhotoController {
 
     @PostMapping("/batch")
     public ResponseEntity<?> PhotoBatch(@PathVariable("userId") Long userId, @RequestBody PhotoBatchRequestDto request){
-        photoService.saveInitialBatchPhotos(request);
+        photoService.saveInitialBatchPhotos(userId, request);
         return ResponseEntity.ok("초기 배치 동기화 완료");
     }
 
@@ -36,9 +33,9 @@ public class PhotoController {
     }
 
     @GetMapping("/{photoId}")
-    public ResponseEntity<PhotoDto> PhotoDetail(@PathVariable("userId") Long userId, @PathVariable Long photo_id){
-        PhotoDto photoDto =  photoService.getPhoto(userId, photo_id);
-        return ResponseEntity.ok(photoDto);
+    public ResponseEntity<PhotoResponseDto> PhotoDetail(@PathVariable("userId") Long userId, @PathVariable Long photo_id){
+        PhotoResponseDto photoResponseDto =  photoService.getPhoto(userId, photo_id);
+        return ResponseEntity.ok(photoResponseDto);
     }
 
     @DeleteMapping("/{photoId}")
@@ -47,15 +44,15 @@ public class PhotoController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<PhotoDto>> PhotoList(@PathVariable("userId") Long userId){
-        List<PhotoDto> photoDtos = photoService.getAllPhotos(userId);
-        return ResponseEntity.ok(photoDtos);
+    public ResponseEntity<List<PhotoResponseDto>> PhotoList(@PathVariable("userId") Long userId){
+        List<PhotoResponseDto> photoResponseDtos = photoService.getAllPhotos(userId);
+        return ResponseEntity.ok(photoResponseDtos);
     }
 
     @GetMapping("/warning")
-    public ResponseEntity<List<PhotoDto>> PhotoWarning(@PathVariable("userId") Long userId){
-        List<PhotoDto> photoDtos = photoService.getWarningPhotos(userId);
-        return ResponseEntity.ok(photoDtos);
+    public ResponseEntity<List<PhotoResponseDto>> PhotoWarning(@PathVariable("userId") Long userId){
+        List<PhotoResponseDto> photoResponseDtos = photoService.getWarningPhotos(userId);
+        return ResponseEntity.ok(photoResponseDtos);
        // return ResponseEntity.ok("민감한 사진 리스트 전달 완료");
     }
 }

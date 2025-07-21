@@ -1,7 +1,7 @@
 package com.rephoto.rephoto_api.controller;
 
 import com.rephoto.rephoto_api.domain.Photo;
-import com.rephoto.rephoto_api.dto.PhotoListDto;
+import com.rephoto.rephoto_api.dto.PhotoDto;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
 import com.rephoto.rephoto_api.service.PhotoService;
 import com.rephoto.rephoto_api.dto.PhotoBatchRequestDto;
@@ -46,12 +46,12 @@ public class PhotoController {
     }
 
     @GetMapping("")
-    public List<PhotoListDto> PhotoList(@PathVariable("user_id") Long userId){
+    public List<PhotoDto> PhotoList(@PathVariable("user_id") Long userId){
         return photoService.getAllPhotos(userId);
     }
 
     @GetMapping("/warning")
-    public List<PhotoListDto> PhotoWarning(@PathVariable("user_id") Long userId){
+    public List<PhotoDto> PhotoWarning(@PathVariable("user_id") Long userId){
         return photoService.getWarningPhotos(userId);
        // return ResponseEntity.ok("민감한 사진 리스트 전달 완료");
     }

@@ -2,9 +2,10 @@ package com.rephoto.rephoto_api.service;
 
 import com.rephoto.rephoto_api.domain.Photo;
 import com.rephoto.rephoto_api.dto.PhotoBatchRequestDto;
-import com.rephoto.rephoto_api.dto.PhotoListDto;
+import com.rephoto.rephoto_api.dto.PhotoDto;
 import com.rephoto.rephoto_api.dto.PhotoSyncRequestDto;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +25,11 @@ public class PhotoService {
 
     }
 
-    public List<PhotoListDto> getAllPhotos(Long userId) {
+    public List<PhotoDto> getAllPhotos(Long userId) {
         List<Photo> photos = photoRepository.findByUserId(userId);
 
         return photos.stream()
-                .map(photo -> PhotoListDto.builder()
+                .map(photo -> PhotoDto.builder()
                         .photoId(photo.getPhotoId())
                         .imageUrl(photo.getImageUrl())
                         .isPrivate(photo.isPrivate())
@@ -40,10 +41,10 @@ public class PhotoService {
                 .toList();
     }
 
-    public List<PhotoListDto> getWarningPhotos(Long userId) {
+    public List<PhotoDto> getWarningPhotos(Long userId) {
         List<Photo> photos = photoRepository.findByUserIdAndIsPrivateTrue(userId);
         return photos.stream()
-                .map(photo -> PhotoListDto.builder()
+                .map(photo -> PhotoDto.builder()
                         .photoId(photo.getPhotoId())
                         .imageUrl(photo.getImageUrl())
                         .isPrivate(photo.isPrivate())
@@ -57,9 +58,10 @@ public class PhotoService {
     }
 
     public Photo getPhoto(Long userId, Long photoId) {
-        Photo photo = photoRepository.findByUserIdAndPhotoId(userId, photoId);
-        return photo;
+        return photoRepository.findByUserIdAndPhotoId(userId, photoId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 사진이 없습니다."));
     }
+
 
     public void deletePhoto(Long userId, Long photoId) {
         photoRepository.deleteByUserIdAndPhotoId(userId, photoId);

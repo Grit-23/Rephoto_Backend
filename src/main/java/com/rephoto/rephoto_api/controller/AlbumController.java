@@ -26,19 +26,13 @@ public class AlbumController {
         return albumService.getAllAlbums(user_id);
     }
 
-    @GetMapping("/albums")
+    @GetMapping("")
     public ResponseEntity<AlbumDto> searchAlbum(
             @RequestParam String tag,
             @RequestParam Long userId) {
 
-        Optional<Album> album = albumRepository.findByUser_UserIdAndTag_TagName(userId, tag);
-
-        if (album.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        AlbumDto dto = AlbumDto.fromEntity(album.get());
-        return ResponseEntity.ok(dto);
+        AlbumDto albumDto = albumService.getAlbumBySearch(userId, tag);
+        return ResponseEntity.ok(albumDto);
     }
 
     @GetMapping("/{userId}/{tagId}/photos")
@@ -48,6 +42,6 @@ public class AlbumController {
 
         List<PhotoDto> photos = photoService.getPhotosByUserAndTag(userId, tagId);
         return ResponseEntity.ok(photos);
-    }
+    }//앨범 상세 -> 앨범 속 사진 반환 (photoservice 에 함수 만들어둠)
 
 }

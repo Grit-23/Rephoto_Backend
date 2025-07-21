@@ -24,6 +24,7 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     List<Photo> findByUserIdAndIsPrivateTrue(Long userId);
     Optional<Photo> findByUserIdAndPhotoId(Long userId, Long photoId);
     void deleteByUserIdAndPhotoId(Long userId, Long photoId);
+    List<Photo> findPhotosByUserIdAndTagId(Long userId, Long tagId);
 
     boolean existsByUserUserIdAndHash(Long userId, String hash);
 

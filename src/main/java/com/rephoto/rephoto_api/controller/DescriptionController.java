@@ -29,12 +29,9 @@ public class DescriptionController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "사진 설명 생성 성공",
                     content = @Content(schema = @Schema(implementation = DescriptionResponseDto.class))),
-            @ApiResponse(responseCode = "401", description = "유효하지 않은 접근(다른 회원의 사진에 접근)",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "이미지를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "설명 생성에 실패하였습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "401", description = "유효하지 않은 접근(다른 회원의 사진에 접근)", content = @Content),
+            @ApiResponse(responseCode = "404", description = "이미지를 찾을 수 없습니다.", content = @Content),
+            @ApiResponse(responseCode = "500", description = "설명 생성에 실패하였습니다.", content = @Content)
     })
     public ResponseEntity<Description> generateDescription(
             @RequestBody @Valid DescriptionRequestDto requestDto) {

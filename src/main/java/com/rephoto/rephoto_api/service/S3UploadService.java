@@ -38,24 +38,27 @@ public class S3UploadService {
             ".jpg", ".jpeg", ".png", ".gif", ".webp", ".heic"
     );
 
+    /**
+     * 파일을 S3에 업로드하고 업로드된 파일 URL을 반환합니다.
+     *
+     * @param file  업로드할 파일
+     * @param folder S3 내 저장할 폴더 경로 (예: "images")
+     * @return 업로드된 S3 파일 URL
+     */
     public String upload(MultipartFile file, String folder) {
         try {
-            // 1. 파일 비어 있는지 검사
             if (file == null || file.isEmpty()) {
                 throw new CustomException(ErrorCode.FILE_EMPTY);
             }
 
-            // 2. 크기 제한 검사
             if (file.getSize() > MAX_FILE_SIZE) {
                 throw new CustomException(ErrorCode.FILE_SIZE_EXCEEDED);
             }
 
-            // 3. 이미지 타입 검사 (type이 "image"일 경우)
             if ("image".equalsIgnoreCase(folder)) {
                 validateImage(file);
             }
 
-            // 4. 파일 업로드
             String fileName = folder + "/" + UUID.randomUUID() + "_" + file.getOriginalFilename();
 
             PutObjectRequest request = PutObjectRequest.builder()

@@ -56,4 +56,13 @@ public class PhotoService {
 
     }
 
+    public Photo getPhoto(Long userId, Long photoId) {
+        Photo photo = photoRepository.findByUserIdAndPhotoId(userId, photoId);
+        return photo;
+    }
+
+    public void deletePhoto(Long userId, Long photoId) {
+        photoRepository.deleteByUserIdAndPhotoId(userId, photoId);
+    }
+
 }

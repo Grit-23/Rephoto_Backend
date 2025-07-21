@@ -1,5 +1,6 @@
 package com.rephoto.rephoto_api.controller;
 
+import com.rephoto.rephoto_api.domain.Photo;
 import com.rephoto.rephoto_api.dto.PhotoListDto;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
 import com.rephoto.rephoto_api.service.PhotoService;
@@ -35,13 +36,13 @@ public class PhotoController {
     }
 
     @GetMapping("/{photo_id}")
-    public ResponseEntity<?> PhotoDetail(@PathVariable("user_id") Long userId, @PathVariable Long photo_id){
-        return null; //임시
+    public Photo PhotoDetail(@PathVariable("user_id") Long userId, @PathVariable Long photo_id){
+        return photoService.getPhoto(userId, photo_id);
     }
 
     @DeleteMapping("/{photo_id}")
     public ResponseEntity<?> PhotoDelete(@PathVariable("user_id") Long userId, @PathVariable Long photo_id){
-        return null; //임시
+        return ResponseEntity.ok("삭제 완료");
     }
 
     @GetMapping("")
@@ -50,7 +51,7 @@ public class PhotoController {
     }
 
     @GetMapping("/warning")
-    public ResponseEntity<?> PhotoWarning(@PathVariable("user_id") Long userId){
+    public List<PhotoListDto> PhotoWarning(@PathVariable("user_id") Long userId){
         return photoService.getWarningPhotos(userId);
        // return ResponseEntity.ok("민감한 사진 리스트 전달 완료");
     }

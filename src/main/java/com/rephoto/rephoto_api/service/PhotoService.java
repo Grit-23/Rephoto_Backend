@@ -41,7 +41,19 @@ public class PhotoService {
     }
 
     public List<PhotoListDto> getWarningPhotos(Long userId) {
-        return null; //임시
+        List<Photo> photos = photoRepository.findByUserIdAndIsPrivateTrue(userId);
+        return photos.stream()
+                .map(photo -> PhotoListDto.builder()
+                        .photoId(photo.getPhotoId())
+                        .imageUrl(photo.getImageUrl())
+                        .isPrivate(photo.isPrivate())
+                        .latitude(photo.getLatitude())
+                        .longitude(photo.getLongitude())
+                        .createdAt(photo.getCreatedAt())
+                        .build()
+                )
+                .toList();
+
     }
 
 }

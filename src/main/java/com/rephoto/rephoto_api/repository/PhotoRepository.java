@@ -20,6 +20,9 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     @Query("SELECT p FROM Photo p WHERE p.user.userId = :userId")
     List<Photo> findByUserId(Long userId);
 
+    List<Photo> findByUserIdAndIsPrivateTrue(Long userId);
+
+
     boolean existsByUserUserIdAndHash(Long userId, String hash);
 
     Long user(User user);

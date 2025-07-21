@@ -47,12 +47,11 @@ public class PhotoController {
     @GetMapping("")
     public List<PhotoListDto> PhotoList(@PathVariable("user_id") Long userId){
         return photoService.getAllPhotos(userId);
-
     }
 
     @GetMapping("/warning")
     public ResponseEntity<?> PhotoWarning(@PathVariable("user_id") Long userId){
-        photoService.getWarningPhotos(userId);
-        return ResponseEntity.ok("민감한 사진 리스트 전달 완료");
+        return photoService.getWarningPhotos(userId);
+       // return ResponseEntity.ok("민감한 사진 리스트 전달 완료");
     }
 }

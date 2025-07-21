@@ -37,10 +37,8 @@ public class UserController {
     @Operation(summary = "회원 정보 조회", description = "userId로 회원 정보 조회. 현재 로그인한 사용자 본인만 조회 가능.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공"),
-            @ApiResponse(responseCode = "401", description = "접근 권한 없음",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "회원 정보를 찾을 수 없음",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "401", description = "접근 권한 없음", content = @Content),
+            @ApiResponse(responseCode = "404", description = "회원 정보를 찾을 수 없음", content = @Content)
     })
     public ResponseEntity<UserInfoResponseDto> getUserInfo(
             @PathVariable Long userId,
@@ -55,13 +53,10 @@ public class UserController {
     @DeleteMapping("/{userId}")
     @Operation(summary = "회원 탈퇴", description = "userId로 회원 탈퇴.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공"),
-            @ApiResponse(responseCode = "401", description = "유효하지 않은 접근(본인이 아닌 계정 접근)",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "회원 없음",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "회원 탈퇴 실패(서버 오류)",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공", content = @Content),
+            @ApiResponse(responseCode = "401", description = "유효하지 않은 접근(본인이 아닌 계정 접근)", content = @Content),
+            @ApiResponse(responseCode = "404", description = "회원 없음", content = @Content),
+            @ApiResponse(responseCode = "500", description = "회원 탈퇴 실패(서버 오류)", content = @Content)
     })
     public ResponseEntity<Map<String, String>> deleteUser(
             @PathVariable Long userId,
@@ -75,15 +70,11 @@ public class UserController {
     @PutMapping("/{userId}")
     @Operation(summary = "회원 정보 수정", description = "userId로 회원 정보를 수정. 본인 계정만 수정 가능")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원 정보 수정 성공"),
-            @ApiResponse(responseCode = "400", description = "비밀번호와 사용자 이름은 필수입니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "403", description = "다른 사용자의 정보를 수정할 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "회원 정보 수정 중 서버 오류",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "200", description = "회원 정보 수정 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "비밀번호와 사용자 이름은 필수입니다.", content = @Content),
+            @ApiResponse(responseCode = "403", description = "다른 사용자의 정보를 수정할 수 없습니다.", content = @Content),
+            @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없습니다.", content = @Content),
+            @ApiResponse(responseCode = "500", description = "회원 정보 수정 중 서버 오류", content = @Content)
     })
     public ResponseEntity<Map<String, String>> updateUser(
             @PathVariable Long userId,

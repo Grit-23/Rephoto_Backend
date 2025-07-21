@@ -41,10 +41,8 @@ public class LoginController {
     @Operation(summary = "로그인", description = "로그인 후 JWT 토큰을 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "로그인 성공"),
-            @ApiResponse(responseCode = "401", description = "아이디 또는 비밀번호 오류",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "서버 내부 오류 (토큰 생성 실패 등)",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "401", description = "아이디 또는 비밀번호 오류", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류 (토큰 생성 실패 등)", content = @Content)
     })
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request) {
         String token = loginService.login(request);

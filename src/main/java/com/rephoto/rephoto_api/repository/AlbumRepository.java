@@ -9,5 +9,6 @@ import java.util.Optional;
 public interface AlbumRepository {
     List<Album> findByUser_UserId(Long userId);
     Optional<Album> findBy(Long id);
-    Optional<Album> findByUser_UserIdAndTag_TagId(Long userId, Long tagId);
+    Optional<Album> findByUser_UserIdAndTag_TagName(Long userId, String tagName);
+
 }

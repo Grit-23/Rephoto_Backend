@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,4 +68,10 @@ public class PhotoService {
         photoRepository.deleteByUserIdAndPhotoId(userId, photoId);
     }
 
+    public List<PhotoDto> getPhotosByUserAndTag(Long userId, Long tagId) {
+        List<Photo> photos = photoRepository.findPhotosByUserIdAndTagId(userId, tagId);
+        return photos.stream()
+                .map(PhotoDto::fromEntity)
+                .collect(Collectors.toList());
+    }
 }

@@ -39,13 +39,10 @@ public class S3UploadService {
     );
 
     /**
-     * 파일을 S3에 업로드하고 업로드된 파일 URL을 반환합니다.
-     *
-     * @param file  업로드할 파일
-     * @param folder S3 내 저장할 폴더 경로 (예: "images")
-     * @return 업로드된 S3 파일 URL
+     * 파일을 S3에 업로드하고 URL을 반환합니다.
+     * 서버가 직접 업로드하며, 'images/' 폴더 하드코딩
      */
-    public String upload(MultipartFile file, String folder) {
+    public String upload(MultipartFile file) {
         try {
             if (file == null || file.isEmpty()) {
                 throw new CustomException(ErrorCode.FILE_EMPTY);
@@ -55,11 +52,9 @@ public class S3UploadService {
                 throw new CustomException(ErrorCode.FILE_SIZE_EXCEEDED);
             }
 
-            if ("image".equalsIgnoreCase(folder)) {
-                validateImage(file);
-            }
+            validateImage(file);
 
-            String fileName = folder + "/" + UUID.randomUUID() + "_" + file.getOriginalFilename();
+            String fileName = "images/" + UUID.randomUUID() + "_" + file.getOriginalFilename();
 
             PutObjectRequest request = PutObjectRequest.builder()
                     .bucket(bucket)
@@ -71,8 +66,6 @@ public class S3UploadService {
 
             return getFileUrl(fileName);
 
-        } catch (CustomException e) {
-            throw e;
         } catch (IOException e) {
             throw new CustomException(ErrorCode.FILE_UPLOAD_FAILED);
         }
@@ -88,7 +81,7 @@ public class S3UploadService {
         boolean validType = contentType != null && ALLOWED_IMAGE_TYPES.contains(contentType);
         boolean validExt = ALLOWED_IMAGE_EXTENSIONS.contains(extension);
 
-        if (!validType && !validExt) {
+        if (!validType || !validExt) {
             throw new CustomException(ErrorCode.UNSUPPORTED_IMAGE_TYPE);
         }
     }

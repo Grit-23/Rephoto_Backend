@@ -39,10 +39,8 @@ public class S3UploadController {
             @ApiResponse(responseCode = "500", description = "서버 오류 실패", content = @Content)
     })
     public ResponseEntity<S3UploadResponseDto> uploadFile(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("type") String type
-    ) {
-        String url = s3UploadService.upload(file, type);
+            @RequestParam("file") MultipartFile file) {
+        String url = s3UploadService.upload(file);
         return ResponseEntity.ok(new S3UploadResponseDto(url));
     }
 }

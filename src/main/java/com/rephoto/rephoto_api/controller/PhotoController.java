@@ -1,10 +1,13 @@
 package com.rephoto.rephoto_api.controller;
 
+import com.rephoto.rephoto_api.domain.User;
 import com.rephoto.rephoto_api.dto.PhotoResponseDto;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
+import com.rephoto.rephoto_api.repository.UserRepository;
 import com.rephoto.rephoto_api.service.PhotoService;
 import com.rephoto.rephoto_api.dto.PhotoBatchRequestDto;
 import com.rephoto.rephoto_api.dto.PhotoSyncRequestDto;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +21,18 @@ import java.util.List;
 public class PhotoController {
 
     private final PhotoRepository photoRepository;
+    private final UserRepository userRepository;
     private final PhotoService photoService;
 
     @PostMapping("/batch")
-    public ResponseEntity<?> PhotoBatch(@PathVariable("userId") Long userId, @RequestBody PhotoBatchRequestDto request){
-        photoService.saveInitialBatchPhotos(userId, request);
+    public ResponseEntity<?> photoBatch(@PathVariable("userId") Long userId,
+                                        @RequestBody PhotoBatchRequestDto request) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
+
+        photoService.savePhotos(request.toPhotoRequestDtoList(), user);
+
         return ResponseEntity.ok("초기 배치 동기화 완료");
     }
 

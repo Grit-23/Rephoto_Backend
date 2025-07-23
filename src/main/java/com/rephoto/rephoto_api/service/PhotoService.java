@@ -1,10 +1,13 @@
 package com.rephoto.rephoto_api.service;
 
 import com.rephoto.rephoto_api.domain.Photo;
+import com.rephoto.rephoto_api.domain.User;
 import com.rephoto.rephoto_api.dto.PhotoBatchRequestDto;
+import com.rephoto.rephoto_api.dto.PhotoRequestDto;
 import com.rephoto.rephoto_api.dto.PhotoResponseDto;
 import com.rephoto.rephoto_api.dto.PhotoSyncRequestDto;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
+import com.rephoto.rephoto_api.repository.PhotoTagRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,11 +22,14 @@ import java.util.stream.Collectors;
 public class PhotoService {
 
     private final PhotoRepository photoRepository;
+    private final PhotoTagRepository photoTagRepository;
 
-    public void saveInitialBatchPhotos(Long userId, PhotoBatchRequestDto request) {
-        Optional<Photo> latestPhoto = photoRepository.findFirstByUser_UserIdOrderByCreatedAtDesc(userId);
-        LocalDateTime latestCreatedAt = latestPhoto.map(Photo::getCreatedAt).orElse(null);
+    public void savePhotos(List<PhotoRequestDto> dtos, User user) {
+        List<Photo> photos = dtos.stream()
+                .map(dto -> PhotoRequestDto.toEntity(dto, user))
+                .toList();
 
+        photoRepository.saveAll(photos);
     }
 
     public void saveIncrementalPhotos(PhotoSyncRequestDto request) {
@@ -75,7 +81,7 @@ public class PhotoService {
     }
 
     public List<PhotoResponseDto> getPhotosByUserAndTag(Long userId, Long tagId) {
-        List<Photo> photos = photoRepository.findPhotosByUserIdAndTagId(userId, tagId);
+        List<Photo> photos = photoTagRepository.findPhotosByUserIdAndTagId(userId, tagId);
         return photos.stream()
                 .map(PhotoResponseDto::fromEntity)
                 .collect(Collectors.toList());

@@ -3,7 +3,6 @@ package com.rephoto.rephoto_api.controller;
 import com.rephoto.rephoto_api.dto.MapPhotoResponseDto;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
-import com.rephoto.rephoto_api.exception.ErrorResponse;
 import com.rephoto.rephoto_api.service.PhotoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

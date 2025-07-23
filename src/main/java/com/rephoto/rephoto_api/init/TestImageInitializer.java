@@ -1,0 +1,49 @@
+package com.rephoto.rephoto_api.init;
+
+import com.rephoto.rephoto_api.domain.Photo;
+import com.rephoto.rephoto_api.repository.PhotoRepository;
+import com.rephoto.rephoto_api.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+
+//테스트용 사진 생성 코드
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class TestImageInitializer implements CommandLineRunner{
+
+    private final UserRepository userRepository;
+    private final PhotoRepository photoRepository;
+
+    @Override
+    public void run(String... args) {
+        userRepository.findByLoginId("test_user_id").ifPresent(user -> {
+            boolean exists = photoRepository.existsByUserUserIdAndHash(user.getUserId(), "test-photo-hash");
+
+            if (!exists) {
+                log.info("📸 테스트 사진 생성 중...");
+
+                Photo photo = new Photo();
+                photo.setUser(user);
+                photo.setImageUrl("https://example.com/test_photo.jpg");
+                photo.setPrivate(false);
+                photo.setLatitude(37.5665);
+                photo.setLongitude(126.9780);
+                photo.setHash("test-photo-hash");
+                photo.setCreatedAt(LocalDateTime.now());
+
+                photoRepository.save(photo);
+                log.info("✅ 테스트 사진 생성 완료");
+            } else {
+                log.info("✅ 이미 테스트 사진이 존재합니다.");
+            }
+        });
+    }
+
+}

@@ -5,6 +5,7 @@ import com.rephoto.rephoto_api.dto.PhotoBatchRequestDto;
 import com.rephoto.rephoto_api.dto.PhotoDto;
 import com.rephoto.rephoto_api.dto.PhotoSyncRequestDto;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
+import com.rephoto.rephoto_api.repository.PhotoTagRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class PhotoService {
 
     private final PhotoRepository photoRepository;
+    private final PhotoTagRepository photoTagRepository;
 
     public void saveInitialBatchPhotos(PhotoBatchRequestDto request) {
 

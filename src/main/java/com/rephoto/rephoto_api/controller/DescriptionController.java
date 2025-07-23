@@ -4,8 +4,10 @@ import com.rephoto.rephoto_api.domain.Description;
 import com.rephoto.rephoto_api.dto.DescriptionRequestDto;
 import com.rephoto.rephoto_api.dto.DescriptionResponseDto;
 import com.rephoto.rephoto_api.exception.ErrorResponse;
+import com.rephoto.rephoto_api.security.UserDetailsImpl;
 import com.rephoto.rephoto_api.service.DescriptionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,7 +16,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.nio.file.attribute.UserPrincipal;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,10 +38,16 @@ public class DescriptionController {
             @ApiResponse(responseCode = "404", description = "이미지를 찾을 수 없습니다.", content = @Content),
             @ApiResponse(responseCode = "500", description = "설명 생성에 실패하였습니다.", content = @Content)
     })
-    public ResponseEntity<Description> generateDescription(
-            @RequestBody @Valid DescriptionRequestDto requestDto) {
+    public ResponseEntity<DescriptionResponseDto> generateDescription(
+            @RequestBody @Valid DescriptionRequestDto requestDto,
+            @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        return null; //임시
+        /*
+        Long userId = userDetails.getUserId();
+        DescriptionResponseDto response = descriptionService.generateDescription(userId, requestDto.getPhotoId());
+        return ResponseEntity.ok(response);
+         */
+        return null;
     }
 
 }

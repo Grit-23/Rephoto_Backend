@@ -32,10 +32,8 @@ public class JoinController {
     @Operation(summary = "회원가입", description = "회원 정보를 입력받아 새로운 계정 생성")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원가입 성공"),
-            @ApiResponse(responseCode = "409", description = "중복된 로그인 ID",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "서버 오류",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "409", description = "중복된 로그인 ID", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<String> join(@RequestBody @Valid JoinRequestDto requestDto) {
         joinService.join(requestDto);

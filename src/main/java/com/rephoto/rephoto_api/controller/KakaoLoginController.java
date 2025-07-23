@@ -34,10 +34,8 @@ public class KakaoLoginController {
     @Operation(summary = "카카오 로그인", description = "카카오 액세스 토큰으로 로그인")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "로그인 성공"),
-            @ApiResponse(responseCode = "401", description = "카카오 인증 실패 (유효하지 않은 로그인 ID 또는 비밀번호)",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "서버 오류 (로그인 처리 실패)",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "401", description = "카카오 인증 실패 (유효하지 않은 로그인 ID 또는 비밀번호)", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류 (로그인 처리 실패)", content = @Content)
     })
     public ResponseEntity<LoginResponseDto> kakaoLogin(@RequestBody KakaoLoginRequestDto request) {
         LoginResponseDto response = kakaoLoginService.kakaoLogin(request);

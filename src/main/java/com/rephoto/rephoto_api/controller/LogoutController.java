@@ -26,13 +26,10 @@ public class LogoutController {
 
     @Operation(summary = "로그아웃", description = "서버에서 로그인 상태를 해제 (클라이언트 측에서 JWT 토큰 삭제)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
-            @ApiResponse(responseCode = "400", description = "이미 로그아웃된 사용자",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "403", description = "잘못된 사용자 접근",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "서버 내부 오류 (로그아웃 처리 실패)",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "이미 로그아웃된 사용자", content = @Content),
+            @ApiResponse(responseCode = "401", description = "잘못된 JWT 토큰 사용", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류 (로그아웃 처리 실패)", content = @Content)
     })
     @PostMapping("/{userId}")
 

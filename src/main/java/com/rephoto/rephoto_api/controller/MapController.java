@@ -3,7 +3,6 @@ package com.rephoto.rephoto_api.controller;
 import com.rephoto.rephoto_api.dto.MapPhotoResponseDto;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
-import com.rephoto.rephoto_api.exception.ErrorResponse;
 import com.rephoto.rephoto_api.service.PhotoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,10 +34,8 @@ public class MapController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공",
                     content = @Content(schema = @Schema(implementation = MapPhotoResponseDto.class))),
-            @ApiResponse(responseCode = "400", description = "필수 파라미터 누락 또는 좌표 형식 오류",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "사진 또는 상세 정보 없음",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "400", description = "필수 파라미터 누락 또는 좌표 형식 오류", content = @Content),
+            @ApiResponse(responseCode = "404", description = "사진 또는 상세 정보 없음", content = @Content)
     })
     public ResponseEntity<MapPhotoResponseDto> getPhotosByLocation(
             @Parameter(description = "중심 위도", example = "37.5665")

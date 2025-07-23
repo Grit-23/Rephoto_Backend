@@ -53,7 +53,7 @@ public class PhotoService {
     }
 
     public List<PhotoResponseDto> getWarningPhotos(Long userId) {
-        List<Photo> photos = photoRepository.findByUserIdAndIsPrivateTrue(userId);
+        List<Photo> photos = photoRepository.findByUser_UserIdAndIsPrivateTrue(userId);
         return photos.stream()
                 .map(photo -> PhotoResponseDto.builder()
                         .photoId(photo.getPhotoId())
@@ -69,7 +69,7 @@ public class PhotoService {
     }
 
     public PhotoResponseDto getPhoto(Long userId, Long photoId) {
-        Photo photo = photoRepository.findByUserIdAndPhotoId(userId, photoId)
+        Photo photo = photoRepository.findByUser_UserIdAndPhotoId(userId, photoId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 사진이 없습니다."));
         return PhotoResponseDto.fromEntity(photo);
     }
@@ -77,7 +77,7 @@ public class PhotoService {
 
 
     public void deletePhoto(Long userId, Long photoId) {
-        photoRepository.deleteByUserIdAndPhotoId(userId, photoId);
+        photoRepository.deleteByUser_UserIdAndPhotoId(userId, photoId);
     }
 
     public List<PhotoResponseDto> getPhotosByUserAndTag(Long userId, Long tagId) {

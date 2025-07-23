@@ -1,8 +1,11 @@
 package com.rephoto.rephoto_api.controller;
 
 import com.rephoto.rephoto_api.dto.MapPhotoResponseDto;
+import com.rephoto.rephoto_api.dto.MapRequestDto;
+import com.rephoto.rephoto_api.dto.MapResponseDto;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
+import com.rephoto.rephoto_api.service.MapService;
 import com.rephoto.rephoto_api.service.PhotoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,41 +21,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/photos/map")
 @Tag(name = "지도 API", description = "사용자 현재 위치 가반으로 1km 내 사진 조회")
 @RequiredArgsConstructor
 public class MapController {
 
-    private final PhotoService photoService;
+    private final MapService mapService;
 
     @GetMapping
     @Operation(
-            summary = "위치 기반 사진 조회",
-            description = "지정한 위도(lat), 경도(lng)를 이용하여 반경 1km 내에 존재하는 사진 조회하여 정보 반환"
+            summary = "지도 기반 사진 조회",
+            description = ""
     )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공",
-                    content = @Content(schema = @Schema(implementation = MapPhotoResponseDto.class))),
-            @ApiResponse(responseCode = "400", description = "필수 파라미터 누락 또는 좌표 형식 오류", content = @Content),
-            @ApiResponse(responseCode = "404", description = "사진 또는 상세 정보 없음", content = @Content)
-    })
-    public ResponseEntity<MapPhotoResponseDto> getPhotosByLocation(
-            @Parameter(description = "중심 위도", example = "37.5665")
-            @RequestParam(required = true) Double lat,
-
-            @Parameter(description = "중심 경도", example = "126.9780")
-            @RequestParam(required = true) Double lng
-    ){
+    public ResponseEntity<List<MapResponseDto>> getMapClusters(
+            @RequestParam Long userId,
+            @RequestParam double minLat,
+            @RequestParam double maxLat,
+            @RequestParam double minLng,
+            @RequestParam double maxLng,
+            @RequestParam int zoomLevel
+    ) {
         /*
-        if (lat == null || lng == null) {
-            throw new CustomException(ErrorCode.MAP_PARAMS_REQUIRED);
-        }
-
-        final int radius = 1000; //반경 1km 내 사
-
-        MapPhotoResponseDto response = photoService.getPhotosByLocation(lat, lng, radius);
-        return ResponseEntity.ok(response);
+        MapRequestDto requestDto = new MapRequestDto(userId, minLat, maxLat, minLng, maxLng, zoomLevel);
+        List<MapResponseDto> clusters = mapService.getPhotoClusters(requestDto);
+        return ResponseEntity.ok(clusters);
 
          */
         return null;

@@ -2,67 +2,60 @@ package com.rephoto.rephoto_api.service;
 
 import com.rephoto.rephoto_api.domain.Description;
 import com.rephoto.rephoto_api.domain.Photo;
-import com.rephoto.rephoto_api.dto.DescriptionResponseDto;
+import com.rephoto.rephoto_api.domain.User;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
 import com.rephoto.rephoto_api.repository.DescriptionRepository;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
-import com.rephoto.rephoto_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class DescriptionService {
 
-    private final PhotoRepository photoRepository;
     private final DescriptionRepository descriptionRepository;
-    //private final AiService aiService;
+    private final PhotoRepository photoRepository;
 
-    public DescriptionResponseDto generateDescription(Long userId, Long photoId) {
+    public String getDescription(Long photoId) {
+        try {
+            // 인증된 사용자 정보 가져오기
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (!(principal instanceof User currentUser)) {
+                throw new CustomException(ErrorCode.UNAUTHORIZED_DESCRIPTION_ACCESS);
+            }
 
-        // 1. 사진 조회
+            Photo photo = photoRepository.findById(photoId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.PHOTO_NOT_FOUND));
+
+            Description description = descriptionRepository.findByPhoto(photo)
+                    .orElseThrow(() -> new CustomException(ErrorCode.DESCRIPTION_NOT_FOUND));
+
+            return description.getDescription() != null ? description.getDescription() : "아직 설명이 생성되지 않았습니다.";
+
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            // 500에러 처리
+            throw new RuntimeException("AI 설명 생성 중 오류가 발생했습니다.", e);
+        }
+    }
+
+    // 테스트용 임시 설명 생성 코드
+    @Transactional
+    public void generateDescriptionManually(Long photoId) {
         Photo photo = photoRepository.findById(photoId)
-                .orElseThrow(() -> new CustomException(ErrorCode.IMAGE_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.PHOTO_NOT_FOUND));
 
-        // 2. 본인 소유 확인
-        if (!photo.getUser().getUserId().equals(userId)) {
-            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS);
-        }
-
-        // 3. 설명 조회
         Description description = descriptionRepository.findByPhoto(photo)
-                .orElseThrow(() -> new CustomException(ErrorCode.DESCRIPTION_GENERATION_FAILED));
+                .orElseThrow(() -> new CustomException(ErrorCode.DESCRIPTION_NOT_FOUND));
 
-        // 4. 이미 설명이 있는 경우
-        if (description.getDescription() != null) {
-            return DescriptionResponseDto.builder()
-                    .descriptionId(description.getDescriptionId())
-                    .description(description.getDescription())
-                    .photoId(photo.getPhotoId())
-                    .build();
-        }
+        // 실제 AI 연동은 빠진 상태이므로, 임의 설명을 삽입
+        String aiDescription = "이것은 AI가 자동으로 생성한 예시 설명입니다.";
 
-        /*
-        // 5. AI 설명 생성 요청
-        String generatedDescription = aiService.generateDescription(photo.getImageUrl());
-
-        // 6. 저장 및 반환
-        description.setDescription(generatedDescription);
+        description.setDescription(aiDescription);
         descriptionRepository.save(description);
-
-        return DescriptionResponseDto.builder()
-                .descriptionId(description.getDescriptionId())
-                .description(generatedDescription)
-                .photoId(photo.getPhotoId())
-                .build();
-
-         */
-        String testDescription = "testDescription_임시 설명 데이터";
-        return DescriptionResponseDto.builder()
-                .descriptionId(description.getDescriptionId())
-                .description(testDescription)
-                .photoId(photo.getPhotoId())
-                .build();
     }
 }

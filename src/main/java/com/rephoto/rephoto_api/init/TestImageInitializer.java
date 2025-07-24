@@ -1,6 +1,8 @@
 package com.rephoto.rephoto_api.init;
 
+import com.rephoto.rephoto_api.domain.Description;
 import com.rephoto.rephoto_api.domain.Photo;
+import com.rephoto.rephoto_api.repository.DescriptionRepository;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
 import com.rephoto.rephoto_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ public class TestImageInitializer implements CommandLineRunner{
 
     private final UserRepository userRepository;
     private final PhotoRepository photoRepository;
+    private final DescriptionRepository descriptionRepository;
 
     @Override
     public void run(String... args) {
@@ -40,6 +43,15 @@ public class TestImageInitializer implements CommandLineRunner{
 
                 photoRepository.save(photo);
                 log.info("✅ 테스트 사진 생성 완료");
+
+                // 2. 설명 생성
+                Description description = Description.builder()
+                        .photo(photo)
+                        .description("테스트용으로 생성된 설명입니다.")
+                        .build();
+                descriptionRepository.save(description);
+                log.info("📝 테스트 설명 생성 완료");
+
             } else {
                 log.info("✅ 이미 테스트 사진이 존재합니다.");
             }

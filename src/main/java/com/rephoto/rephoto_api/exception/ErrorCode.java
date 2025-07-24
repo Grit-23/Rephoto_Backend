@@ -40,8 +40,11 @@ public enum ErrorCode {
     PHOTO_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 사진을 찾을 수 없습니다."),
 
     // 설명
-    DESCRIPTION_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "설명 생성에 실패하였습니다."),
-    UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN,"해당 사진에 접근할 권한이 없습니다."),
+    DESCRIPTION_PARAMS_REQUIRED(HttpStatus.BAD_REQUEST, "파라미터가 누락되었습니다.(사진 ID, 설명 내용)"),
+    DESCRIPTION_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 해당 사진에 대한 설명이 존재합니다."),
+    DESCRIPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 사진에 설명이 존재하지 않습니다."),
+
+    UNAUTHORIZED_DESCRIPTION_ACCESS(HttpStatus.FORBIDDEN,"해당 사진에 접근할 권한이 없습니다."),
 
     // Kakao 관련 오류
     KAKAO_AUTH_FAILED(HttpStatus.UNAUTHORIZED, "카카오 인증에 실패했습니다.");

@@ -1,11 +1,13 @@
 package com.rephoto.rephoto_api.service;
 
+import com.rephoto.rephoto_api.domain.Description;
 import com.rephoto.rephoto_api.domain.Photo;
 import com.rephoto.rephoto_api.domain.User;
 import com.rephoto.rephoto_api.dto.PhotoBatchRequestDto;
 import com.rephoto.rephoto_api.dto.PhotoRequestDto;
 import com.rephoto.rephoto_api.dto.PhotoResponseDto;
 import com.rephoto.rephoto_api.dto.PhotoSyncRequestDto;
+import com.rephoto.rephoto_api.repository.DescriptionRepository;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
 import com.rephoto.rephoto_api.repository.PhotoTagRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,6 +25,7 @@ public class PhotoService {
 
     private final PhotoRepository photoRepository;
     private final PhotoTagRepository photoTagRepository;
+    private final DescriptionRepository descriptionRepository;
 
     public void savePhotos(List<PhotoRequestDto> dtos, User user) {
         List<Photo> photos = dtos.stream()
@@ -30,6 +33,16 @@ public class PhotoService {
                 .toList();
 
         photoRepository.saveAll(photos);
+
+        // 설명 테이블 자동으로 생성 (description은 null로 생성됨)
+        List<Description> descriptions = photos.stream()
+                .map(photo -> Description.builder()
+                        .photo(photo)
+                        .description(null)
+                        .build())
+                .toList();
+
+        descriptionRepository.saveAll(descriptions);
     }
 
     public void saveIncrementalPhotos(PhotoSyncRequestDto request) {

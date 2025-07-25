@@ -38,7 +38,7 @@ public class TestImageInitializer implements CommandLineRunner{
                 photo.setPrivate(false);
                 photo.setLatitude(37.5665);
                 photo.setLongitude(126.9780);
-                photo.setHash("test-photo-hash");
+                photo.setFileName("test-photo-name");
                 photo.setCreatedAt(LocalDateTime.now());
 
                 photoRepository.save(photo);

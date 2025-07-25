@@ -39,7 +39,7 @@ public class DescriptionService {
             throw e;
         } catch (Exception e) {
             // 500에러 처리
-            throw new RuntimeException("AI 설명 생성 중 오류가 발생했습니다.", e);
+            throw new RuntimeException("서버 오류가 발생했습니다.", e);
         }
     }
 
@@ -53,7 +53,7 @@ public class DescriptionService {
                 .orElseThrow(() -> new CustomException(ErrorCode.DESCRIPTION_NOT_FOUND));
 
         // 실제 AI 연동은 빠진 상태이므로, 임의 설명을 삽입
-        String aiDescription = "이것은 AI가 자동으로 생성한 예시 설명입니다.";
+        String aiDescription = "ㄱㄱ에서 ㄴㄴ과 함께 ㄷㄷ날짜에 ㄹㄹ을 하며 찍은 사진";
 
         description.setDescription(aiDescription);
         descriptionRepository.save(description);

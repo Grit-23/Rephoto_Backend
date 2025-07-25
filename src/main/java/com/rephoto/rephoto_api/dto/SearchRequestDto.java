@@ -15,6 +15,6 @@ import lombok.Setter;
 public class SearchRequestDto {
 
     @NotBlank(message = "검색어를 입력하세요.")
-    @Schema(description = "사용자가 입력한 자연어 검색어", example = "벚꽃길 산책")
+    @Schema(description = "사용자가 입력한 자연어 검색어", example = "올해 5월 초 바다 사진")
     private String query;
 }

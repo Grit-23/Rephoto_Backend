@@ -47,7 +47,10 @@ public enum ErrorCode {
     UNAUTHORIZED_DESCRIPTION_ACCESS(HttpStatus.FORBIDDEN,"해당 사진에 접근할 권한이 없습니다."),
 
     // Kakao 관련 오류
-    KAKAO_AUTH_FAILED(HttpStatus.UNAUTHORIZED, "카카오 인증에 실패했습니다.");
+    KAKAO_AUTH_FAILED(HttpStatus.UNAUTHORIZED, "카카오 인증에 실패했습니다."),
+
+    // 검색
+    SEARCH_QUERY_REQUIRED(HttpStatus.BAD_REQUEST, "검색어가 비어있습니다."),;
 
     private final HttpStatus httpStatus;
     private final String message;

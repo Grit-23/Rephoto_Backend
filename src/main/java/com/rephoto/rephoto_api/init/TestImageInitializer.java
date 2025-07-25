@@ -48,6 +48,7 @@ public class TestImageInitializer implements CommandLineRunner{
                 Description description = Description.builder()
                         .photo(photo)
                         .description("테스트용으로 생성된 설명입니다.")
+                        .vector(0.5F)
                         .build();
                 descriptionRepository.save(description);
                 log.info("📝 테스트 설명 생성 완료");

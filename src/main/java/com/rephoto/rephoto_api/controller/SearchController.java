@@ -4,6 +4,7 @@ import com.rephoto.rephoto_api.domain.User;
 import com.rephoto.rephoto_api.dto.SearchRequestDto;
 import com.rephoto.rephoto_api.dto.SearchResponseDto;
 import com.rephoto.rephoto_api.repository.SearchRepository;
+import com.rephoto.rephoto_api.service.PhotoService;
 import com.rephoto.rephoto_api.service.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,15 +34,16 @@ public class SearchController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "검색어 입력 성공",
                     content = @Content(schema = @Schema(implementation = SearchResponseDto.class))),
-            @ApiResponse(responseCode = "400", description = "검색어 누락", content = @Content),
+            @ApiResponse(responseCode = "400", description = "검색어 누락 또는 형식 오류", content = @Content),
             @ApiResponse(responseCode = "401", description = "JWT 토큰 오류", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
-    public ResponseEntity<SearchResponseDto> searchQuery(
-            @RequestBody @Valid SearchRequestDto requestDto,
-            @AuthenticationPrincipal User user
-    ) {
-        return null; //임시
+    public ResponseEntity<SearchResponseDto> search(
+            @RequestBody SearchRequestDto request,
+            @AuthenticationPrincipal User user) {
+
+        SearchResponseDto response = searchService.searchPhotos(request.getQuery(), user.getUserId());
+        return ResponseEntity.ok(response);
     }
 
 }

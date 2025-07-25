@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "AI에 사진 설명 생성 요청 DTO")
-public class DescriptionRequestDto {
+public class AiDescriptionRequestDto {
 
     @NotNull(message = "사진 ID는 필수입니다.")
     @Schema(description = "설명을 등록할 사진", example = "3", required = true )

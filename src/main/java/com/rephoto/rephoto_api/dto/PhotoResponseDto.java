@@ -18,6 +18,7 @@ public class PhotoResponseDto {
     private Double latitude;
     private Double longitude;
     private LocalDateTime createdAt;
+    private String fileName;
 
     public static PhotoResponseDto fromEntity(Photo photo) {
         return PhotoResponseDto.builder()

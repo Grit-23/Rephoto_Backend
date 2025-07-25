@@ -35,7 +35,7 @@ public class Photo {
     private User user;
 
     @Column(nullable = false, unique = true)
-    private String hash;
+    private String fileName;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

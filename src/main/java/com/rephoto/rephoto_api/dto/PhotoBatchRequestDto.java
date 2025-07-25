@@ -16,7 +16,7 @@ public class PhotoBatchRequestDto {
         private Double longitude;
         private String imageUrl;
         private String createdAt;
-        private String hash;
+        private String fileName;
     }
 
     public List<PhotoRequestDto> toPhotoRequestDtoList() {
@@ -27,7 +27,7 @@ public class PhotoBatchRequestDto {
                         .latitude(meta.getLatitude())
                         .longitude(meta.getLongitude())
                         .createdAt(LocalDateTime.parse(meta.getCreatedAt()))
-                        .hash(meta.getHash())
+                        .hash(meta.getFileName())
                         .build())
                 .toList();
     }

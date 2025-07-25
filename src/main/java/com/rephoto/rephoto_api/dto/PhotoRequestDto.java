@@ -17,7 +17,7 @@ public class PhotoRequestDto {
     private Double latitude;
     private Double longitude;
     private LocalDateTime createdAt;
-    private String hash;
+    private String fileName;
 
     public static Photo toEntity(PhotoRequestDto dto, User user) {
         return Photo.builder()
@@ -27,7 +27,7 @@ public class PhotoRequestDto {
                 .latitude(dto.getLatitude())
                 .longitude(dto.getLongitude())
                 .createdAt(dto.getCreatedAt())
-                .hash(dto.getHash())
+                .fileName(dto.getFileName())
                 .build();
     }
 

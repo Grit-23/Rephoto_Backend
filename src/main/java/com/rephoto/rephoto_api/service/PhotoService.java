@@ -6,7 +6,6 @@ import com.rephoto.rephoto_api.domain.User;
 import com.rephoto.rephoto_api.dto.PhotoBatchRequestDto;
 import com.rephoto.rephoto_api.dto.PhotoRequestDto;
 import com.rephoto.rephoto_api.dto.PhotoResponseDto;
-import com.rephoto.rephoto_api.dto.PhotoSyncRequestDto;
 import com.rephoto.rephoto_api.repository.DescriptionRepository;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
 import com.rephoto.rephoto_api.repository.PhotoTagRepository;
@@ -45,9 +44,9 @@ public class PhotoService {
         descriptionRepository.saveAll(descriptions);
     }
 
-    public void saveIncrementalPhotos(PhotoSyncRequestDto request) {
+    /*public void saveIncrementalPhotos(PhotoSyncRequestDto request) {
 
-    }
+    }*/
 
     public List<PhotoResponseDto> getAllPhotos(Long userId) {
         List<Photo> photos = photoRepository.findByUser_UserId(userId);

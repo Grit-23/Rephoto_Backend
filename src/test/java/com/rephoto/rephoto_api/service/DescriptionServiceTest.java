@@ -8,21 +8,16 @@ import com.rephoto.rephoto_api.repository.PhotoRepository;
 import com.rephoto.rephoto_api.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -69,7 +64,7 @@ class DescriptionServiceTest {
         descriptionRepository.save(description);
 
         // 테스트 실행
-        descriptionService.generateDescriptionManually(photo.getPhotoId());
+        descriptionService.generateDescriptionByAi(photo.getPhotoId());
 
         // 결과 확인
         Description updated = descriptionRepository.findByPhoto(photo)

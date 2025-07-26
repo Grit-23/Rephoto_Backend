@@ -42,7 +42,7 @@ public enum ErrorCode {
     // 설명
     DESCRIPTION_PARAMS_REQUIRED(HttpStatus.BAD_REQUEST, "파라미터가 누락되었습니다.(사진 ID, 설명 내용)"),
     DESCRIPTION_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 해당 사진에 대한 설명이 존재합니다."),
-    DESCRIPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 사진에 설명이 존재하지 않습니다."),
+    DESCRIPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 사진에 설명 테이블이 연동되지 않았습니다."),
 
     UNAUTHORIZED_DESCRIPTION_ACCESS(HttpStatus.FORBIDDEN,"해당 사진에 접근할 권한이 없습니다."),
 

@@ -1,8 +1,10 @@
 package com.rephoto.rephoto_api.controller;
 
+import com.rephoto.rephoto_api.domain.User;
 import com.rephoto.rephoto_api.dto.MapPhotoResponseDto;
 import com.rephoto.rephoto_api.dto.MapRequestDto;
 import com.rephoto.rephoto_api.dto.MapResponseDto;
+import com.rephoto.rephoto_api.dto.SearchResponseDto;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
 import com.rephoto.rephoto_api.service.MapService;
@@ -16,40 +18,35 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/photos/map")
-@Tag(name = "지도 API", description = "사용자 현재 위치 가반으로 1km 내 사진 조회")
+@RequestMapping("/api/map")
+@Tag(name = "지도 API", description = "사진의 위치 기반 클러스터링 수행하여 지도에 표시")
 @RequiredArgsConstructor
 public class MapController {
 
     private final MapService mapService;
 
-    @GetMapping
-    @Operation(
-            summary = "지도 기반 사진 조회",
-            description = ""
+    @GetMapping("/photos")
+    @Operation( summary = "지도 기반 사진 조회",
+            description = "화면의 지도 위치, 줌 레벨 기반으로 사진을 클러스터링 하여 표시"
     )
-    public ResponseEntity<List<MapResponseDto>> getMapClusters(
-            @RequestParam Long userId,
-            @RequestParam double minLat,
-            @RequestParam double maxLat,
-            @RequestParam double minLng,
-            @RequestParam double maxLng,
-            @RequestParam int zoomLevel
-    ) {
-        /*
-        MapRequestDto requestDto = new MapRequestDto(userId, minLat, maxLat, minLng, maxLng, zoomLevel);
-        List<MapResponseDto> clusters = mapService.getPhotoClusters(requestDto);
-        return ResponseEntity.ok(clusters);
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "검색어 입력 성공",
+                    content = @Content(schema = @Schema(implementation = MapResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "파라미터 누락 또는 잘못된 형식", content = @Content),
+            @ApiResponse(responseCode = "401", description = "JWT 토큰 오류", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<List<MapResponseDto>> getClusteredPhotos(
+            @ModelAttribute MapRequestDto request,
+            @AuthenticationPrincipal User currentUser) {
 
-         */
-        return null;
+        List<MapResponseDto> result = mapService.getClusteredPhotos(currentUser.getUserId(), request);
+        return ResponseEntity.ok(result);
     }
 }

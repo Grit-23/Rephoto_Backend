@@ -3,8 +3,6 @@ package com.rephoto.rephoto_api.controller;
 import com.rephoto.rephoto_api.domain.User;
 import com.rephoto.rephoto_api.dto.SearchRequestDto;
 import com.rephoto.rephoto_api.dto.SearchResponseDto;
-import com.rephoto.rephoto_api.repository.SearchRepository;
-import com.rephoto.rephoto_api.service.PhotoService;
 import com.rephoto.rephoto_api.service.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,7 +39,17 @@ public class SearchController {
             @RequestBody SearchRequestDto request,
             @AuthenticationPrincipal User user) {
 
-        SearchResponseDto response = searchService.searchPhotos(request.getQuery(), user.getUserId());
+        String query = request.getQuery();
+
+        SearchResponseDto response;
+        if (query.trim().startsWith("#")) {
+            // 태그 기반 검색
+            response = searchService.searchPhotosByTags(query, user.getUserId());
+        } else {
+            // 설명 기반 검색
+            response = searchService.searchPhotosByQuery(query, user.getUserId());
+        }
+
         return ResponseEntity.ok(response);
     }
 

@@ -1,18 +1,20 @@
 package com.rephoto.rephoto_api.service;
 
 import com.rephoto.rephoto_api.domain.Photo;
+import com.rephoto.rephoto_api.domain.PhotoTag;
 import com.rephoto.rephoto_api.domain.User;
+import com.rephoto.rephoto_api.dto.SearchRequestDto;
 import com.rephoto.rephoto_api.dto.SearchResponseDto;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
 import com.rephoto.rephoto_api.repository.DescriptionRepository;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
-import com.rephoto.rephoto_api.repository.SearchRepository;
+import com.rephoto.rephoto_api.repository.PhotoTagRepository;
 import com.rephoto.rephoto_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +23,9 @@ public class SearchService {
     private final DescriptionRepository descriptionRepository;
     private final PhotoRepository photoRepository;
     private final UserRepository userRepository;
+    private final PhotoTagRepository photoTagRepository;
 
-    public SearchResponseDto searchPhotos(String query, Long userId) {
+    public SearchResponseDto searchPhotosByQuery(String query, Long userId) {
         try {
             // 1. 쿼리 유효성 체크
             if (query == null || query.trim().isEmpty()) {
@@ -59,4 +62,52 @@ public class SearchService {
         }
     }
 
+    public SearchResponseDto searchPhotosByTags(String tagQuery, Long userId) {
+
+        try {
+            if (tagQuery == null || tagQuery.trim().isEmpty()) {
+                throw new CustomException(ErrorCode.SEARCH_QUERY_REQUIRED);
+            }
+
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+            // #으로 시작하는 태그 최대 20개 추출
+            List<String> tagNames = Arrays.stream(tagQuery.trim().split("\\s+"))
+                    .filter(word -> word.startsWith("#"))
+                    .map(tag -> tag.substring(1))
+                    .distinct()
+                    .limit(20)
+                    .toList();
+
+            if (tagNames.isEmpty()) {
+                throw new CustomException(ErrorCode.SEARCH_TAGS_REQUIRED);
+            }
+
+            Set<Photo> resultPhotos = new HashSet<>();
+
+            for (String tagName : tagNames) {
+                List<PhotoTag> matches = photoTagRepository.findAll().stream()
+                        .filter(pt -> pt.getPhoto().getUser().getUserId().equals(userId))
+                        .filter(pt -> pt.getTag().getTagName().equals(tagName))
+                        .toList();
+
+                for (PhotoTag pt : matches) {
+                    resultPhotos.add(pt.getPhoto());
+                }
+            }
+
+            List<Long> photoIds = resultPhotos.stream()
+                    .map(Photo::getPhotoId)
+                    .sorted()
+                    .toList();
+
+            return new SearchResponseDto(tagQuery, photoIds);
+
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("태그 검색 중 서버 오류 발생", e);
+        }
+    }
 }

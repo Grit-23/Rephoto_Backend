@@ -27,7 +27,7 @@ public class TestImageInitializer implements CommandLineRunner{
     @Override
     public void run(String... args) {
         userRepository.findByLoginId("test_user_id").ifPresent(user -> {
-            boolean exists = photoRepository.existsByUserUserIdAndHash(user.getUserId(), "test-photo-hash");
+            boolean exists = photoRepository.existsByUser_UserIdAndFileName(user.getUserId(), "test-photo-name");
 
             if (!exists) {
                 log.info("📸 테스트 사진 생성 중...");

@@ -51,8 +51,8 @@ class DescriptionServiceTest {
         photo.setImageUrl("https://example.com/test.jpg");
         photo.setLatitude(37.5665);
         photo.setLongitude(126.9780);
+        photo.setFileName("test-photo-name");
         photo.setCreatedAt(LocalDateTime.now());
-        photo.setHash("test-hash");
 
         photoRepository.save(photo);
 

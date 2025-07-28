@@ -50,7 +50,9 @@ public enum ErrorCode {
     KAKAO_AUTH_FAILED(HttpStatus.UNAUTHORIZED, "카카오 인증에 실패했습니다."),
 
     // 검색
-    SEARCH_QUERY_REQUIRED(HttpStatus.BAD_REQUEST, "검색어가 비어있습니다."),;
+    SEARCH_QUERY_REQUIRED(HttpStatus.BAD_REQUEST, "검색어가 비어있습니다."),
+    TOO_MANY_TAGS(HttpStatus.BAD_REQUEST, "태그는 최대 20개까지 입력할 수 있습니다."),
+    SEARCH_TAGS_REQUIRED(HttpStatus.BAD_REQUEST, "유효한 태그가 없습니다. '#'으로 시작하는 태그를 입력해주세요."),;
 
     private final HttpStatus httpStatus;
     private final String message;

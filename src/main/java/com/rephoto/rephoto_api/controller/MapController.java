@@ -1,16 +1,9 @@
 package com.rephoto.rephoto_api.controller;
 
 import com.rephoto.rephoto_api.domain.User;
-import com.rephoto.rephoto_api.dto.MapPhotoResponseDto;
-import com.rephoto.rephoto_api.dto.MapRequestDto;
-import com.rephoto.rephoto_api.dto.MapResponseDto;
-import com.rephoto.rephoto_api.dto.SearchResponseDto;
-import com.rephoto.rephoto_api.exception.CustomException;
-import com.rephoto.rephoto_api.exception.ErrorCode;
+import com.rephoto.rephoto_api.dto.*;
 import com.rephoto.rephoto_api.service.MapService;
-import com.rephoto.rephoto_api.service.PhotoService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,5 +41,15 @@ public class MapController {
 
         List<MapResponseDto> result = mapService.getClusteredPhotos(currentUser.getUserId(), request);
         return ResponseEntity.ok(result);
+    }
+
+    @Operation(summary = "클러스터 내 사진 조회", description = "지도의 특정 클러스터의 사진들을 앨범 형식으로 조회")
+    @GetMapping("/clusters")
+    public ResponseEntity<List<PhotoRequestDto>> getPhotosInCluster(
+            @ModelAttribute ClusterRequestDto request,
+            @AuthenticationPrincipal User currentUser) {
+
+        List<PhotoRequestDto> photos = mapService.getPhotosInCluster(currentUser.getUserId(), request);
+        return ResponseEntity.ok(photos);
     }
 }

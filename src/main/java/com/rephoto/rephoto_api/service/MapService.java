@@ -1,16 +1,20 @@
 package com.rephoto.rephoto_api.service;
 
 import com.rephoto.rephoto_api.domain.Photo;
+import com.rephoto.rephoto_api.dto.ClusterRequestDto;
 import com.rephoto.rephoto_api.dto.MapRequestDto;
 import com.rephoto.rephoto_api.dto.MapResponseDto;
+import com.rephoto.rephoto_api.dto.PhotoRequestDto;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MapService {
@@ -57,8 +61,8 @@ public class MapService {
                 String thumb = cluster.get(0).getImageUrl();
 
                 result.add(MapResponseDto.builder()
-                        .centerLat(avgLat)
-                        .centerLng(avgLng)
+                        .cellLat(avgLat)
+                        .cellLng(avgLng)
                         .photoCount(cluster.size())
                         .thumbnailUrl(thumb)
                         .build());
@@ -70,6 +74,49 @@ public class MapService {
             throw e; // MAP_PARAMS_REQUIRED, JWT_TOKEN_INVALID
         } catch (Exception e) {
             throw new RuntimeException(e); // 500 내부 에러 처리
+        }
+    }
+
+    public List<PhotoRequestDto> getPhotosInCluster(Long userId, ClusterRequestDto request) {
+        try {
+            if (userId == null) throw new CustomException(ErrorCode.JWT_TOKEN_INVALID);
+
+            double cellSize = getCellSizeByZoom(request.getZoomLevel());
+
+            double minLat = request.getCellLat();
+            double maxLat = minLat + cellSize;
+
+            double minLng = request.getCellLng();
+            double maxLng = minLng + cellSize;
+
+            log.info("📍 Zoom Level: {}, Cell Size: {}", request.getZoomLevel(), cellSize);
+            log.info("📦 계산된 범위: lat [{} ~ {}], lng [{} ~ {}]", minLat, maxLat, minLng, maxLng);
+
+            // 해당 유저의 사진들 중 셀 범위 안에 있는 것만 필터링
+            List<Photo> filtered = photoRepository.findByUser_UserId(userId).stream()
+                    .filter(p -> p.getLatitude() != null && p.getLongitude() != null)
+                    .filter(p -> p.getLatitude() >= minLat && p.getLatitude() <= maxLat)
+                    .filter(p -> p.getLongitude() >= minLng && p.getLongitude() <= maxLng)
+                    .toList();
+            log.info("📸 유저 전체 사진 수: {}", photoRepository.findByUser_UserId(userId).size());
+            log.info("🎯 필터링된 사진 수: {}", filtered.size());
+
+            return filtered.stream()
+                    .map(photo -> PhotoRequestDto.builder()
+                            .imageUrl(photo.getImageUrl())
+                            .isPrivate(photo.isPrivate())
+                            .latitude(photo.getLatitude())
+                            .longitude(photo.getLongitude())
+                            .createdAt(photo.getCreatedAt())
+                            .fileName(photo.getFileName())
+                            .build())
+                    .toList();
+
+
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

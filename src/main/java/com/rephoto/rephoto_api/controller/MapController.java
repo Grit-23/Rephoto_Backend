@@ -43,13 +43,21 @@ public class MapController {
         return ResponseEntity.ok(result);
     }
 
-    @Operation(summary = "클러스터 내 사진 조회", description = "지도의 특정 클러스터의 사진들을 앨범 형식으로 조회")
     @GetMapping("/clusters")
-    public ResponseEntity<List<PhotoRequestDto>> getPhotosInCluster(
+    @Operation(summary = "클러스터 내 사진 조회",
+            description = "지도의 특정 클러스터의 사진들을 앨범 형식으로 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "클러스터 조회 성공",
+                content = @Content(schema = @Schema(implementation = ClusterResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "파라미터 누락 또는 잘못된 형식", content = @Content),
+            @ApiResponse(responseCode = "401", description = "JWT 토큰 오류", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<List<ClusterResponseDto>> getPhotosInCluster(
             @ModelAttribute ClusterRequestDto request,
             @AuthenticationPrincipal User currentUser) {
 
-        List<PhotoRequestDto> photos = mapService.getPhotosInCluster(currentUser.getUserId(), request);
+        List<ClusterResponseDto> photos = mapService.getPhotosInCluster(currentUser.getUserId(), request);
         return ResponseEntity.ok(photos);
     }
 }

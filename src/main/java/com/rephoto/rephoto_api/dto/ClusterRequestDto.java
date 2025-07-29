@@ -2,8 +2,10 @@ package com.rephoto.rephoto_api.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Schema(description = "클러스터 내 사진 조회 요청 DTO")
 public class ClusterRequestDto {
 

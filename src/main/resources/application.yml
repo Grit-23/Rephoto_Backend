@@ -3,8 +3,8 @@ spring:
     import: application-secret.yml
 
   datasource:
-    #url: jdbc:mysql://43.203.25.149:3306/rephoto_db
-    url: jdbc:mysql://localhost:3306/rephoto_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://43.203.25.149:3306/rephoto_db
+    #url: jdbc:mysql://localhost:3306/rephoto_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: rephoto_user
     driver-class-name: com.mysql.cj.jdbc.Driver
 

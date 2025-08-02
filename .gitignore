@@ -38,3 +38,9 @@ out/
 
 ### S3 secret key ###
 src/main/resources/application-secret.yml
+
+# 테스트 코드 무시
+/src/test/
+
+# initializer 무시
+/src/main/java/com/rephoto/rephoto_api/init

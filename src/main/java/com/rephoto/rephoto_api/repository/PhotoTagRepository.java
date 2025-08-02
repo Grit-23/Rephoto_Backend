@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+
 @Repository
 public interface PhotoTagRepository extends JpaRepository<PhotoTag, Long> {
 
@@ -25,7 +26,11 @@ public interface PhotoTagRepository extends JpaRepository<PhotoTag, Long> {
     """)
     List<Photo> findPhotosByUserIdAndTagName(Long userId, String tagName);
 
+
     Optional<PhotoTag> findByPhotoAndTag(Photo photo, Tag tag);
 
     void deleteByPhotoAndTag(Photo photo, Tag tag);
+
+    void saveByPhotoAndTag(Photo photo, Tag tag);
 }
+

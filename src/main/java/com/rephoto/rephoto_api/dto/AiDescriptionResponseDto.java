@@ -20,9 +20,6 @@ public class AiDescriptionResponseDto {
     @Schema(description = "설명이 등록된 사진 Id", example = "5")
     private Long photoId;
 
-    @Schema(description = "설명이 등록된 태그 Id", example = "5")
-    private Long TagId;
-
     @Schema(description = "설명이 등록된 태그명(앨범명)", example = "바다")
     private String tagName;
 }

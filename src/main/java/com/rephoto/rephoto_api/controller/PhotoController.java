@@ -21,7 +21,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/photos/{userId}")
+@RequestMapping("/api/photos")
 @RequiredArgsConstructor
 @Tag(name = "사진 API", description = "사진 업로드, 조회, 삭제, 동기화 기능을 제공하는 API")
 public class PhotoController {
@@ -30,7 +30,7 @@ public class PhotoController {
     private final UserRepository userRepository;
     private final PhotoService photoService;
 
-    @PostMapping("/batch")
+    @PostMapping("/{userId}/batch")
     @Operation(summary = "초기 사진 일괄 업로드", description = "앱 첫 실행 시 사용자 사진을 한 번에 업로드")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "초기 배치 동기화 완료"),
@@ -65,9 +65,8 @@ public class PhotoController {
                     content = @Content(schema = @Schema(implementation = PhotoResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "해당 사진을 찾을 수 없음")
     })
-    public ResponseEntity<PhotoResponseDto> PhotoDetail(@PathVariable("userId") Long userId,
-                                                        @PathVariable Long photoId) {
-        PhotoResponseDto photoResponseDto = photoService.getPhoto(userId, photoId);
+    public ResponseEntity<PhotoResponseDto> PhotoDetail(@PathVariable Long photoId) {
+        PhotoResponseDto photoResponseDto = photoService.getPhoto(photoId);
         return ResponseEntity.ok(photoResponseDto);
     }
 
@@ -77,12 +76,11 @@ public class PhotoController {
             @ApiResponse(responseCode = "200", description = "사진 삭제 완료"),
             @ApiResponse(responseCode = "404", description = "해당 사진을 찾을 수 없음")
     })
-    public ResponseEntity<?> PhotoDelete(@PathVariable("userId") Long userId,
-                                         @PathVariable Long photoId) {
+    public ResponseEntity<?> PhotoDelete(@PathVariable Long photoId) {
         return ResponseEntity.ok("삭제 완료");
     }
 
-    @GetMapping("")
+    @GetMapping("/{userId}")
     @Operation(summary = "전체 사진 조회", description = "사용자의 모든 사진 리스트를 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "사진 목록 반환",
@@ -93,7 +91,7 @@ public class PhotoController {
         return ResponseEntity.ok(photoResponseDtos);
     }
 
-    @GetMapping("/warning")
+    @GetMapping("/{userId}/warning")
     @Operation(summary = "민감 사진 조회", description = "민감(개인정보 포함)한 사진 리스트를 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "민감 사진 목록 반환",

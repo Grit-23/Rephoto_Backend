@@ -3,6 +3,7 @@ package com.rephoto.rephoto_api.controller;
 import com.rephoto.rephoto_api.service.DescriptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,13 +22,32 @@ public class DescriptionController {
     @GetMapping("/{photoId}")
     @Operation(summary = "사진 설명 조회", description = "photoId로 해당 사진의 설명을 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "설명 조회 성공"),
+            @ApiResponse(responseCode = "200",
+                    description = "설명 조회 성공",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(type = "string", example = "ㄱㄱ에서 ㄴㄴ과 함께 ㄷㄷ날짜에 ㄹㄹ을 하며 찍은 사진")
+                    )
+            ),
             @ApiResponse(responseCode = "404", description = "해당 사진이나 설명이 존재하지 않음"),
             @ApiResponse(responseCode = "403", description = "설명 접근 권한 없음")
     })
     public ResponseEntity<String> getDescription(@PathVariable Long photoId) {
         String description = descriptionService.getDescription(photoId);
         return ResponseEntity.ok(description);
+    }
+
+    @PostMapping("/{photoId}/generate")
+    @Operation(summary = "설명 생성 요청", description = "photoId로 설명이 없는 사진에 대해 AI에 설명 생성 요청")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "설명 생성 성공"),
+            @ApiResponse(responseCode = "400", description = "이미 설명이 존재함"),
+            @ApiResponse(responseCode = "403", description = "접근 권한 없음"),
+            @ApiResponse(responseCode = "404", description = "사진 또는 설명 없음")
+    })
+    public ResponseEntity<String> generateDescription(@PathVariable Long photoId) {
+        descriptionService.generateDescriptionByAi(photoId);
+        return ResponseEntity.ok(" AI로 설명 생성 완료.");
     }
 
 }

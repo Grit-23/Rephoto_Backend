@@ -42,12 +42,17 @@ public enum ErrorCode {
     // 설명
     DESCRIPTION_PARAMS_REQUIRED(HttpStatus.BAD_REQUEST, "파라미터가 누락되었습니다.(사진 ID, 설명 내용)"),
     DESCRIPTION_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 해당 사진에 대한 설명이 존재합니다."),
-    DESCRIPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 사진에 설명이 존재하지 않습니다."),
+    DESCRIPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 사진에 설명 테이블이 연동되지 않았습니다."),
 
     UNAUTHORIZED_DESCRIPTION_ACCESS(HttpStatus.FORBIDDEN,"해당 사진에 접근할 권한이 없습니다."),
 
     // Kakao 관련 오류
-    KAKAO_AUTH_FAILED(HttpStatus.UNAUTHORIZED, "카카오 인증에 실패했습니다.");
+    KAKAO_AUTH_FAILED(HttpStatus.UNAUTHORIZED, "카카오 인증에 실패했습니다."),
+
+    // 검색
+    SEARCH_QUERY_REQUIRED(HttpStatus.BAD_REQUEST, "검색어가 비어있습니다."),
+    TOO_MANY_TAGS(HttpStatus.BAD_REQUEST, "태그는 최대 20개까지 입력할 수 있습니다."),
+    SEARCH_TAGS_REQUIRED(HttpStatus.BAD_REQUEST, "유효한 태그가 없습니다. '#'으로 시작하는 태그를 입력해주세요."),;
 
     private final HttpStatus httpStatus;
     private final String message;

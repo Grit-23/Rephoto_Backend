@@ -9,15 +9,15 @@ import lombok.Data;
 @Schema(description = "지도에 뜨는 사진 응답 DTO")
 public class MapResponseDto {
 
-    @Schema(description = "사진이 표시되는 위도값", example = "37.5665")
-    private double latitude;
+    @Schema(description = "클러스터 셀 시작 위도", example = "37.5")
+    private double cellLat;
 
-    @Schema(description = "사진이 표시되는 경도값", example = "126.9780")
-    private double longitude;
+    @Schema(description = "클러스터 셀 시작 경도", example = "127.0")
+    private double cellLng;
 
-    @Schema(description = "화면에 표시되는 대표 이미지의 url", example = "https://example.com/test_photo.jpg")
+    @Schema(description = "클러스터의 썸네일 이미지 url", example = "https://example.com/test_photo.jpg")
     private String thumbnailUrl;
 
-    @Schema(description = "해당 위치에서 찍은 사진에 포함되는 사진 수", example = "40")
-    private int photoCount;
+    @Schema(description = "클러스터에 포함되는 사진 수", example = "40")
+    private long photoCount;
 }

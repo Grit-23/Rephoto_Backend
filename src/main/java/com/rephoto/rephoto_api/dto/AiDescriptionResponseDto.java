@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Schema(description = "사진 설명 생성 응답 DTO")
-public class DescriptionResponseDto {
+public class AiDescriptionResponseDto {
 
     @Schema(description = "등록된 사진설명의 ID", example = "5")
     private Long descriptionId;

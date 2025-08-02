@@ -3,7 +3,6 @@ package com.rephoto.rephoto_api.controller;
 import com.rephoto.rephoto_api.domain.User;
 import com.rephoto.rephoto_api.dto.SearchRequestDto;
 import com.rephoto.rephoto_api.dto.SearchResponseDto;
-import com.rephoto.rephoto_api.repository.SearchRepository;
 import com.rephoto.rephoto_api.service.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,15 +31,26 @@ public class SearchController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "검색어 입력 성공",
                     content = @Content(schema = @Schema(implementation = SearchResponseDto.class))),
-            @ApiResponse(responseCode = "400", description = "검색어 누락", content = @Content),
+            @ApiResponse(responseCode = "400", description = "검색어 누락 또는 형식 오류", content = @Content),
             @ApiResponse(responseCode = "401", description = "JWT 토큰 오류", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
-    public ResponseEntity<SearchResponseDto> searchQuery(
-            @RequestBody @Valid SearchRequestDto requestDto,
-            @AuthenticationPrincipal User user
-    ) {
-        return null; //임시
+    public ResponseEntity<SearchResponseDto> search(
+            @RequestBody SearchRequestDto request,
+            @AuthenticationPrincipal User user) {
+
+        String query = request.getQuery();
+
+        SearchResponseDto response;
+        if (query.trim().startsWith("#")) {
+            // 태그 기반 검색
+            response = searchService.searchPhotosByTags(query, user.getUserId());
+        } else {
+            // 설명 기반 검색
+            response = searchService.searchPhotosByQuery(query, user.getUserId());
+        }
+
+        return ResponseEntity.ok(response);
     }
 
 }

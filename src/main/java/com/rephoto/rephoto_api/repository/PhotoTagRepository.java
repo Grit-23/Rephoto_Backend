@@ -17,4 +17,11 @@ public interface PhotoTagRepository extends JpaRepository<PhotoTag, Long> {
     """)
     List<Photo> findPhotosByUserIdAndTagId(Long userId, Long tagId);
 
+    @Query("""
+        SELECT pt.photo FROM PhotoTag pt
+        WHERE pt.photo.user.userId = :userId AND pt.tag.tagName = :tagName
+    """)
+    List<Photo> findPhotosByUserIdAndTagName(Long userId, String tagName);
+
+
 }

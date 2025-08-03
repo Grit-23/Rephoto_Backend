@@ -3,6 +3,7 @@ package com.rephoto.rephoto_api.repository;
 import com.rephoto.rephoto_api.domain.Photo;
 import com.rephoto.rephoto_api.domain.PhotoTag;
 import com.rephoto.rephoto_api.domain.Tag;
+import com.rephoto.rephoto_api.dto.TagResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -31,6 +32,6 @@ public interface PhotoTagRepository extends JpaRepository<PhotoTag, Long> {
 
     void deleteByPhotoAndTag(Photo photo, Tag tag);
 
-    void saveByPhotoAndTag(Photo photo, Tag tag);
+    TagResponseDto save(Photo photo, Tag tag);
 }
 

@@ -10,5 +10,5 @@ import lombok.Setter;
 @Builder
 @Schema(description = "태그 생성 및 수정 DTO")
 public class TagRequestDto {
-
+    private String tagName;
 }

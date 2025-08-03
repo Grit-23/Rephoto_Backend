@@ -17,4 +17,8 @@ public class Tag {
     @Column(length = 20, nullable = false, unique = true)
     String tagName;
 
+    public Tag(String tagName) {
+        this.tagName = tagName;
+    }//TagService에서 사용하는 인자 1개 있는 생성자
+
 }

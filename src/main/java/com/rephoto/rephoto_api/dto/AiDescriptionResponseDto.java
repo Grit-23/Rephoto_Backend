@@ -23,7 +23,7 @@ public class AiDescriptionResponseDto {
     private Long photoId;
 
     @Schema(description = "설명이 등록된 태그명(앨범명)", example = "바다")
-    private String tagName;
+    private List<String> tagNames;
 
     @Schema(description = "설명을 벡터화한 숫자", example = "[0.234, 0.878, -0.2345 ...]")
     private List<Double> vector; // 이거 맞는지 모르겟지만 일단 햇슴

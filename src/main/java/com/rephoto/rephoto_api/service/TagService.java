@@ -9,6 +9,7 @@ import com.rephoto.rephoto_api.exception.ErrorCode;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
 import com.rephoto.rephoto_api.repository.PhotoTagRepository;
 import com.rephoto.rephoto_api.repository.TagRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,7 @@ public class TagService {
         //연결된 사진 없으면 tag repository 에서도 그냥 없애는 로직 만들까 생각중...
     }
 
+    @Transactional
     public TagResponseDto replaceTag(Long photoId, Long tagId, String tagName) {
         Photo photo = photoRepository.findById(photoId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTO_NOT_FOUND));

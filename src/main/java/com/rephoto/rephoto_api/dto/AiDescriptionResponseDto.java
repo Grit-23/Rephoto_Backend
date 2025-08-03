@@ -3,6 +3,8 @@ package com.rephoto.rephoto_api.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,4 +24,7 @@ public class AiDescriptionResponseDto {
 
     @Schema(description = "설명이 등록된 태그명(앨범명)", example = "바다")
     private String tagName;
+
+    @Schema(description = "설명을 벡터화한 숫자", example = "[0.234, 0.878, -0.2345 ...]")
+    private List<Double> vector; // 이거 맞는지 모르겟지만 일단 햇슴
 }

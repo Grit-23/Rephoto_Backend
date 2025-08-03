@@ -2,11 +2,13 @@ package com.rephoto.rephoto_api.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "Tag")
 public class Tag {
 

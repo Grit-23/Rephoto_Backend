@@ -36,10 +36,10 @@ public class TagService {
 
     }
 
-    public void deleteTag(Long photoId, String tagName) {
+    public void deleteTag(Long photoId, Long tagId) {
         Photo photo = photoRepository.findById(photoId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTO_NOT_FOUND));
-        Tag tag = tagRepository.findByTagName(tagName)
+        Tag tag = tagRepository.findByTagId(tagId)
                 .orElseThrow(()-> new CustomException(ErrorCode.TAG_NOT_FOUND));
         photoTagRepository.deleteByPhotoAndTag(photo, tag);
         //연결된 사진 없으면 tag repository 에서도 그냥 없애는 로직 만들까 생각중...

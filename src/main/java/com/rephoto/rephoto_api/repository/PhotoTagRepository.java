@@ -2,6 +2,8 @@ package com.rephoto.rephoto_api.repository;
 
 import com.rephoto.rephoto_api.domain.Photo;
 import com.rephoto.rephoto_api.domain.PhotoTag;
+import com.rephoto.rephoto_api.domain.Tag;
+import com.rephoto.rephoto_api.dto.TagResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -9,8 +11,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+
 @Repository
 public interface PhotoTagRepository extends JpaRepository<PhotoTag, Long> {
+
     @Query("""
         SELECT pt.photo FROM PhotoTag pt
         WHERE pt.photo.user.userId = :userId AND pt.tag.tagId = :tagId
@@ -24,4 +28,10 @@ public interface PhotoTagRepository extends JpaRepository<PhotoTag, Long> {
     List<Photo> findPhotosByUserIdAndTagName(Long userId, String tagName);
 
 
+    Optional<PhotoTag> findByPhotoAndTag(Photo photo, Tag tag);
+
+    void deleteByPhotoAndTag(Photo photo, Tag tag);
+
+    TagResponseDto save(Photo photo, Tag tag);
 }
+

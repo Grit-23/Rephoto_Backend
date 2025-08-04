@@ -80,16 +80,16 @@ public class PhotoService {
 
     }
 
-    public PhotoResponseDto getPhoto(Long userId, Long photoId) {
-        Photo photo = photoRepository.findByUser_UserIdAndPhotoId(userId, photoId)
+    public PhotoResponseDto getPhoto(Long photoId) {
+        Photo photo = photoRepository.findByPhotoId(photoId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 사진이 없습니다."));
         return PhotoResponseDto.fromEntity(photo);
     }
 
 
 
-    public void deletePhoto(Long userId, Long photoId) {
-        photoRepository.deleteByUser_UserIdAndPhotoId(userId, photoId);
+    public void deletePhoto(Long photoId) {
+        photoRepository.deleteByPhotoId(photoId);
     }
 
     public List<PhotoResponseDto> getPhotosByUserAndTag(Long userId, Long tagId) {

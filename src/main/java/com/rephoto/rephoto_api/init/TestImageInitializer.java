@@ -27,8 +27,9 @@ public class TestImageInitializer implements CommandLineRunner{
     @Override
     public void run(String... args) {
         userRepository.findByLoginId("test_user_id").ifPresent(user -> {
+            boolean exists = photoRepository.existsByFileName(user.getUserId(), "test-photo-filename");
             // 대체 방법: 해당 유저의 동일한 이미지 URL로 존재 여부 확인
-            boolean exists = photoRepository.existsByUserUserIdAndImageUrl(user.getUserId(), "https://example.com/test_photo.jpg");
+            //boolean exists = photoRepository.existsByUserUserIdAndImageUrl(user.getUserId(), "https://example.com/test_photo.jpg");
 
             if (!exists) {
                 log.info("📸 테스트 사진 생성 중...");
@@ -49,7 +50,6 @@ public class TestImageInitializer implements CommandLineRunner{
                 Description description = Description.builder()
                         .photo(photo)
                         .description("테스트용으로 생성된 설명입니다.")
-                        .vector(0.5F)
                         .build();
                 descriptionRepository.save(description);
                 log.info("📝 테스트 설명 생성 완료");

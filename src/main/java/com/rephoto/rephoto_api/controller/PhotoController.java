@@ -77,6 +77,7 @@ public class PhotoController {
             @ApiResponse(responseCode = "404", description = "해당 사진을 찾을 수 없음")
     })
     public ResponseEntity<?> PhotoDelete(@PathVariable Long photoId) {
+        photoService.deletePhoto(photoId);
         return ResponseEntity.ok("삭제 완료");
     }
 

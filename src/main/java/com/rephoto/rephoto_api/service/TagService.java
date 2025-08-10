@@ -13,6 +13,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class TagService {
@@ -36,6 +39,32 @@ public class TagService {
                 .build();
 
     }
+
+    @Transactional
+    public List<TagResponseDto> addTagsFromAi(Long photoId, List<String> tagNames) {
+        Photo photo = photoRepository.findById(photoId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PHOTO_NOT_FOUND));
+
+        List<TagResponseDto> result = new ArrayList<>();
+
+        for (String tagName : tagNames) {
+            Tag tag = tagRepository.findByTagName(tagName)
+                    .orElseGet(() -> tagRepository.save(new Tag(tagName)));
+
+            // 중복 연결 방지 (이미 연결된 경우는 skip)
+            if (photoTagRepository.findByPhotoAndTag(photo, tag).isEmpty()) {
+                PhotoTag photoTag = new PhotoTag(photo, tag);
+                photoTagRepository.save(photoTag);
+
+                result.add(TagResponseDto.builder()
+                        .tagName(tag.getTagName())
+                        .photo(photo)
+                        .build());
+            }
+        }
+        return result;
+    }
+
 
     public void deleteTag(Long photoId, Long tagId) {
         Photo photo = photoRepository.findById(photoId)

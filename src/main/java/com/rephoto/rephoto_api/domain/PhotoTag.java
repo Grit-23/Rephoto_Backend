@@ -9,7 +9,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "Photo_tag_map")
+@Table(name = "Photo_tag_map",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_photo_tag", columnNames = {"photo_id", "tag_id"})
+        },
+        indexes = {
+                @Index(name = "idx_photo_tag_photo", columnList = "photo_id"),
+                @Index(name = "idx_photo_tag_tag", columnList = "tag_id")
+        })
 public class PhotoTag {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)

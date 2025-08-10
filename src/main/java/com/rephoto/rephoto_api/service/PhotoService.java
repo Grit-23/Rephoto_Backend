@@ -65,8 +65,9 @@ public class PhotoService {
     }
 
     public List<PhotoResponseDto> getWarningPhotos(Long userId) {
-        List<Photo> photos = photoRepository.findByUser_UserIdAndIsPrivateTrue(userId);
-        return photos.stream()
+
+        List<Photo> privatePhotos = photoRepository.findByUser_UserIdAndIsPrivateTrue(userId);
+        return privatePhotos.stream()
                 .map(photo -> PhotoResponseDto.builder()
                         .photoId(photo.getPhotoId())
                         .imageUrl(photo.getImageUrl())

@@ -81,7 +81,7 @@ public class PhotoController {
         return ResponseEntity.ok("삭제 완료");
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/users/{userId}")
     @Operation(summary = "전체 사진 조회", description = "사용자의 모든 사진 리스트를 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "사진 목록 반환",
@@ -92,7 +92,7 @@ public class PhotoController {
         return ResponseEntity.ok(photoResponseDtos);
     }
 
-    @GetMapping("/{userId}/warning")
+    @GetMapping("/users/{userId}/warning")
     @Operation(summary = "민감 사진 조회", description = "민감(개인정보 포함)한 사진 리스트를 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "민감 사진 목록 반환",

@@ -55,7 +55,8 @@ public enum ErrorCode {
     SEARCH_TAGS_REQUIRED(HttpStatus.BAD_REQUEST, "유효한 태그가 없습니다. '#'으로 시작하는 태그를 입력해주세요."),
     
     //태그 관련
-    TAG_NOT_FOUND(HttpStatus.NOT_FOUND,"해당 태그가 존재하지 않습니다"),;
+    TAG_NOT_FOUND(HttpStatus.NOT_FOUND,"해당 태그가 존재하지 않습니다"),
+    TAG_ALREADY_EXISTS(HttpStatus.CONFLICT, "이 사진에 해당 태그가 이미 존재합니다"),;
 
     private final HttpStatus httpStatus;
     private final String message;

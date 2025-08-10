@@ -13,7 +13,7 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     Optional<Tag> findByTagId(Long tagId);
     boolean existsByTagName(String tagName);
     void deleteByTagName(String tagName);
-    void saveByTagName(String tagName);
+
 
 
 }

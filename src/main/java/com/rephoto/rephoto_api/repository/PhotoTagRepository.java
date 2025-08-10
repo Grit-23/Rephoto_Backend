@@ -32,6 +32,6 @@ public interface PhotoTagRepository extends JpaRepository<PhotoTag, Long> {
 
     void deleteByPhotoAndTag(Photo photo, Tag tag);
 
-    TagResponseDto save(Photo photo, Tag tag);
+    boolean existsByPhotoAndTag(Photo photo, Tag tag);
 }
 

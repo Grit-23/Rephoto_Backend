@@ -24,12 +24,16 @@ public class TagService {
     private final PhotoRepository photoRepository;
 
     public TagResponseDto addTag(Long photoId, String tagName) {
+
         Photo photo = photoRepository.findById(photoId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTO_NOT_FOUND));
 
         Tag tag = tagRepository.findByTagName(tagName)
                 .orElseGet(() -> tagRepository.save(new Tag(tagName))); // 없으면 저장
 
+        if (photoTagRepository.existsByPhotoAndTag(photo, tag)) {
+            throw new CustomException(ErrorCode.TAG_ALREADY_EXISTS);
+        }
         PhotoTag photoTag = new PhotoTag(photo, tag); // 생성자에서 처리
         photoTagRepository.save(photoTag);
 
@@ -77,17 +81,22 @@ public class TagService {
 
     @Transactional
     public TagResponseDto replaceTag(Long photoId, Long tagId, String tagName) {
+
+        //해당 사진 찾고 , 원래 태그 찾고
         Photo photo = photoRepository.findById(photoId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTO_NOT_FOUND));
         Tag tag = tagRepository.findByTagId(tagId)
                 .orElseThrow(()-> new CustomException(ErrorCode.TAG_NOT_FOUND));
+
         //일단 원래 tag 를 phototag 테이블에서 삭제
         photoTagRepository.deleteByPhotoAndTag(photo, tag);
 
+        //바꾸려는 태그 검색 -> 없으면 추가
         Tag newTag = tagRepository.findByTagName(tagName)
                 .orElseGet(() -> tagRepository.save(new Tag(tagName)));
 
-        photoTagRepository.save(photo, newTag);
+        //바꾸려는 태그 저장
+        PhotoTag saved = photoTagRepository.save(new PhotoTag(photo, newTag));
 
         return TagResponseDto.builder()
                 .tagName(newTag.getTagName())

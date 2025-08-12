@@ -24,7 +24,7 @@ public class MapController {
 
     private final MapService mapService;
 
-    @GetMapping("/photos")
+    @PostMapping("/photos")
     @Operation( summary = "지도 기반 사진 조회",
             description = "화면의 지도 위치, 줌 레벨 기반으로 사진을 클러스터링 하여 표시"
     )
@@ -36,14 +36,14 @@ public class MapController {
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<List<MapResponseDto>> getClusteredPhotos(
-            @ModelAttribute MapRequestDto request,
+            @RequestBody MapRequestDto request,
             @AuthenticationPrincipal User currentUser) {
 
         List<MapResponseDto> result = mapService.getClusteredPhotos(currentUser.getUserId(), request);
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/clusters")
+    @PostMapping("/clusters")
     @Operation(summary = "클러스터 내 사진 조회",
             description = "지도의 특정 클러스터의 사진들을 앨범 형식으로 조회")
     @ApiResponses(value = {
@@ -54,7 +54,7 @@ public class MapController {
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<List<ClusterResponseDto>> getPhotosInCluster(
-            @ModelAttribute ClusterRequestDto request,
+            @RequestBody ClusterRequestDto request,
             @AuthenticationPrincipal User currentUser) {
 
         List<ClusterResponseDto> photos = mapService.getPhotosInCluster(currentUser.getUserId(), request);

@@ -15,14 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/tags/{photoId}")
+@RequestMapping("/api/tags/")
 @RequiredArgsConstructor
 @Tag(name = "Tag API", description = "사진 태그 생성, 수정, 삭제 API")
 public class TagController {
 
     private final TagService tagService;
-    private final TagRepository tagRepository;
-
     @Operation(
             summary = "태그 삭제",
             description = "특정 사진(photoId)에서 지정한 태그(tagId)를 삭제합니다.",
@@ -31,10 +29,11 @@ public class TagController {
                     @ApiResponse(responseCode = "404", description = "해당 태그 또는 사진을 찾을 수 없음")
             }
     )
-    @DeleteMapping("/{tagId}")
+    @DeleteMapping("/{photoId}/{tagId}")
     public ResponseEntity<?> deleteTag(
             @Parameter(description = "사진 ID", example = "1") @PathVariable Long photoId,
-            @Parameter(description = "삭제할 태그 ID", example = "5") @PathVariable Long tagId) {
+            @Parameter(description = "삭제할 태그 ID", example = "5") @PathVariable Long tagId
+    ) {
         tagService.deleteTag(photoId, tagId);
         return ResponseEntity.ok("삭제 완료");
     }
@@ -48,11 +47,12 @@ public class TagController {
                     @ApiResponse(responseCode = "404", description = "해당 태그 또는 사진을 찾을 수 없음")
             }
     )
-    @PutMapping("/{tagId}/")
+    @PutMapping("/{photoId}/{tagId}")
     public TagResponseDto updateTag(
             @Parameter(description = "사진 ID", example = "1") @PathVariable Long photoId,
             @Parameter(description = "수정할 태그 ID", example = "5") @PathVariable Long tagId,
-            @RequestBody TagRequestDto requestDto) {
+            @RequestBody TagRequestDto requestDto
+    ) {
         return tagService.replaceTag(photoId, tagId, requestDto.getTagName());
     }
 
@@ -65,10 +65,11 @@ public class TagController {
                     @ApiResponse(responseCode = "404", description = "해당 사진을 찾을 수 없음")
             }
     )
-    @PostMapping("")
+    @PostMapping("/{photoId}")
     public TagResponseDto saveTag(
             @Parameter(description = "사진 ID", example = "1") @PathVariable Long photoId,
-            @RequestBody TagRequestDto requestDto) {
+            @RequestBody TagRequestDto requestDto
+    ) {
         return tagService.addTag(photoId, requestDto.getTagName());
     }
 }

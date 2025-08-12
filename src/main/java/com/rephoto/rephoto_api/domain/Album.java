@@ -5,21 +5,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
-@IdClass(AlbumId.class)
+@Getter @Setter
 public class Album {
 
-    @Id
+    @EmbeddedId
+    private AlbumId id;
+
+    @MapsId("userId")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Id
-    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId("tagId")
+    @ManyToOne(fetch = FetchType.LAZY) // ✅ 핵심: OneToOne → ManyToOne
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;
 
-    // 다른 필드
+    // 다른 필드들(ex. title, coverUrl, createdAt 등)
 }
 

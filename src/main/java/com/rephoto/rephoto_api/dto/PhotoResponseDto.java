@@ -40,6 +40,10 @@ public class PhotoResponseDto {
                 .photoId(photo.getPhotoId())
                 .imageUrl(photo.getImageUrl())
                 .isPrivate(photo.isPrivate())
+                .latitude(photo.getLatitude())
+                .longitude(photo.getLongitude())
+                .createdAt(photo.getCreatedAt())
+                .fileName(photo.getFileName())
                 .build(); // 필요한 경우 latitude 등도 매핑 가능
     }
 }

@@ -12,6 +12,7 @@ import com.rephoto.rephoto_api.repository.PhotoTagRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -59,6 +60,7 @@ public class PhotoService {
                         .latitude(photo.getLatitude())
                         .longitude(photo.getLongitude())
                         .createdAt(photo.getCreatedAt())
+                        .fileName(photo.getFileName())
                         .build()
                 )
                 .toList();
@@ -88,7 +90,7 @@ public class PhotoService {
     }
 
 
-
+    @Transactional(readOnly = false)
     public void deletePhoto(Long photoId) {
         photoRepository.deleteByPhotoId(photoId);
     }

@@ -50,3 +50,6 @@ ai:
   #실제 배포 시 배포 주소로 변경
   #ex) https://ai.myservice.com
 
+springdoc:
+  paths-to-match: /api/**
+

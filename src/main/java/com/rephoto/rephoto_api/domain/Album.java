@@ -5,19 +5,17 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@IdClass(AlbumId.class)
 @Getter @Setter
 public class Album {
 
-    @EmbeddedId
-    private AlbumId id;
-
-    @MapsId("userId")
+    @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @MapsId("tagId")
-    @ManyToOne(fetch = FetchType.LAZY) // ✅ 핵심: OneToOne → ManyToOne
+    @Id
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;
 

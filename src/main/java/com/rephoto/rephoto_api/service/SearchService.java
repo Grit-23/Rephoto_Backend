@@ -42,7 +42,7 @@ public class SearchService {
             // 4. Description에서 vector가 있는 것만 필터링
             List<Photo> validPhotos = userPhotos.stream()
                     .filter(photo -> descriptionRepository.findByPhoto(photo)
-                            .map(desc -> desc.getVector() != null)
+                            .map(desc -> desc.getEmbedding() != null)
                             .orElse(false))
                     .toList();
 

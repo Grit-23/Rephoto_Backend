@@ -1,7 +1,10 @@
 package com.rephoto.rephoto_api.domain;
 
+import com.rephoto.rephoto_api.converter.DoubleListJsonConverter;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,8 +22,9 @@ public class Description {
     @Column(length = 2000, nullable = true)
     private String description;
 
-    @Column(length = 1000, nullable = true)
-    private Float vector; // AI로 설명을 벡터화한 값
+    @Convert(converter = DoubleListJsonConverter.class)
+    @Column(columnDefinition = "LONGTEXT")
+    private List<Double> embedding; // AI로 설명을 벡터화한 값
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "photo_id", nullable = false, unique = true)

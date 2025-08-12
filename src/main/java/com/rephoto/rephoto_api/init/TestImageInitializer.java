@@ -46,6 +46,7 @@ public class TestImageInitializer implements CommandLineRunner{
                 photoRepository.save(photo);
                 log.info("✅ 테스트 사진 생성 완료");
 
+                /*
                 // 2. 설명 생성
                 Description description = Description.builder()
                         .photo(photo)
@@ -53,6 +54,8 @@ public class TestImageInitializer implements CommandLineRunner{
                         .build();
                 descriptionRepository.save(description);
                 log.info("📝 테스트 설명 생성 완료");
+
+                 */
 
             } else {
                 log.info("✅ 이미 테스트 사진이 존재합니다.");

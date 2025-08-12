@@ -46,7 +46,8 @@ kakao:
   user-info-uri: https://kapi.kakao.com/v2/user/me
 
 ai:
-  base-url: null
+  server:
+    url: http://52.79.210.103:8000
   #실제 배포 시 배포 주소로 변경
   #ex) https://ai.myservice.com
 

@@ -37,20 +37,17 @@ public class DescriptionController {
         return ResponseEntity.ok(description);
     }
 
-    /*
-    @PostMapping("/{photoId}/generate")
-    @Operation(summary = "설명 생성 요청", description = "photoId로 설명이 없는 사진에 대해 AI에 설명 생성 요청")
+
+    @PostMapping("/generate")
+    @Operation(summary = "설명 생성 요청", description = "설명이 없는 사진에 대해 AI에 설명 생성 요청")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "설명 생성 성공"),
-            @ApiResponse(responseCode = "400", description = "이미 설명이 존재함"),
-            @ApiResponse(responseCode = "403", description = "접근 권한 없음"),
-            @ApiResponse(responseCode = "404", description = "사진 또는 설명 없음")
+            @ApiResponse(responseCode = "500", description = "AI 설명 생성 중 서버 오류")
     })
-    public ResponseEntity<String> generateDescription(@PathVariable Long photoId) {
-        descriptionService.generateDescriptionByAi(photoId);
-        return ResponseEntity.ok(" AI로 설명 생성 완료.");
+    public ResponseEntity<String> generateMissingDescriptions() {
+        descriptionService.generateDescriptionByAi();
+        return ResponseEntity.ok("설명이 없는 사진에 대해 AI 설명 생성 완료");
     }
 
-     */
 
 }

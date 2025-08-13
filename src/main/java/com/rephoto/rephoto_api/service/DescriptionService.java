@@ -1,27 +1,30 @@
 package com.rephoto.rephoto_api.service;
 
-import com.rephoto.rephoto_api.client.AiClient;
 import com.rephoto.rephoto_api.domain.Description;
 import com.rephoto.rephoto_api.domain.Photo;
 import com.rephoto.rephoto_api.domain.User;
-import com.rephoto.rephoto_api.dto.CaptionResponse;
+import com.rephoto.rephoto_api.dto.ImageCaptionResponse;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
 import com.rephoto.rephoto_api.repository.DescriptionRepository;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Collections;
 
+import java.util.Collections;
+import java.util.List;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DescriptionService {
 
     private final DescriptionRepository descriptionRepository;
     private final PhotoRepository photoRepository;
-    private final AiClient aiClient;
+    private final AiService aiService;
     private final TagCommandService tagCommandService;
 
     public String getDescription(Long photoId) {
@@ -48,50 +51,45 @@ public class DescriptionService {
         }
     }
 
-    // 테스트용 임시 설명 생성 코드
+    // AI 설명 생성 요청
     @Transactional
-    public void generateDescriptionByAi(Long photoId) {
-        try{
-            Photo photo = photoRepository.findById(photoId)
-                    .orElseThrow(() -> new CustomException(ErrorCode.PHOTO_NOT_FOUND));
+    public void generateDescriptionByAi() {
+            List<Description> nullDescriptions = descriptionRepository.findByDescriptionIsNull();
 
-            // 로그인한 유저 정보 가져옴
-            User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            if (!photo.getUser().getUserId().equals(currentUser.getUserId())) {
-                throw new CustomException(ErrorCode.UNAUTHORIZED_DESCRIPTION_ACCESS);
-            }
-            Description description = descriptionRepository.findByPhoto(photo)
-                    .orElseThrow(() -> new CustomException(ErrorCode.DESCRIPTION_NOT_FOUND));
-
-            if (description.getDescription() != null) {
-                throw new CustomException(ErrorCode.DESCRIPTION_ALREADY_EXISTS);
+            if (nullDescriptions.isEmpty()) {
+                return; // 생성할 대상 없음
             }
 
-            // AI 서버 호출
-            CaptionResponse ai = aiClient.generateCaptionByUrl(photoId, photo.getImageUrl());
+            for (Description description : nullDescriptions) {
+                Photo photo = description.getPhoto();
 
-            // 설명 저장
-            description.setDescription(ai.getCaption());
+                try {
+                    // AI 호출 (AiService의 URL 기반 메서드 사용)
+                    ImageCaptionResponse aiResponse =
+                            aiService.generateCaptionFromUrl(photo.getImageUrl());
 
+                    // 설명 저장
+                    description.setDescription(aiResponse.getExplanation());
 
-            // 벡터(임베딩) 저장
-            description.setEmbedding(
-                    ai.getEmbedding() != null ? ai.getEmbedding() : Collections.emptyList()
-            );
-            descriptionRepository.save(description);
+                    // 임베딩 저장
+                    description.setEmbedding(
+                            aiResponse.getExplanation_embedding() != null
+                                    ? aiResponse.getExplanation_embedding()
+                                    : Collections.emptyList()
+                    );
 
-            // 태그 적용
-            if (ai.getTags() != null && !ai.getTags().isEmpty()) {
-                tagCommandService.applyTagsToPhoto(photo, ai.getTags());
+                    descriptionRepository.save(description);
+
+                    // 태그 저장
+                    if (aiResponse.getTags() != null && !aiResponse.getTags().isEmpty()) {
+                        tagCommandService.applyTagsToPhoto(photo, aiResponse.getTags());
+                    }
+
+                } catch (Exception e) {
+                    log.error("AI 설명 생성 실패: photoId={}", photo.getPhotoId(), e);
+                    // 실패한 건 넘어가고 다음 Description 처리
+                }
             }
-
-
-
-        } catch (CustomException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e); //500 에러 처리
-        }
     }
 }
+

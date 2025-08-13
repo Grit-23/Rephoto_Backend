@@ -32,20 +32,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        String uri = request.getRequestURI();
         String authHeader = request.getHeader("Authorization");
 
         try {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                String token = authHeader.substring(7);
+                String token = jwtUtil.resolveToken(authHeader);
 
-                if (jwtUtil.validateToken(token)) {
-                    String loginId = jwtUtil.getLoginIdFromToken(token);
+                jwtUtil.validate(token);
+                String tokenType = jwtUtil.getTokenType(token);
+
+                // 1) ACCESS 토큰
+                if ("ACCESS".equals(tokenType)) {
+                    String loginId = jwtUtil.getLoginId(token);
                     User user = userRepository.findByLoginId(loginId)
                             .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+                // 2) REFRESH 토큰
+                else if ("REFRESH".equals(tokenType)) {
+                    boolean refreshEndpoint =
+                            uri.startsWith("/api/logout") || uri.startsWith("/api/auth/refresh");
+
+                    if (!refreshEndpoint) {
+                        throw new CustomException(ErrorCode.JWT_TOKEN_INVALID);
+                    }
+                } else {
+                    throw new CustomException(ErrorCode.JWT_TOKEN_INVALID);
                 }
             }
 

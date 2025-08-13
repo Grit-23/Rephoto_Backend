@@ -30,6 +30,7 @@ public class SecurityConfig {
                                 "/api/files/upload",
                                 "/api/join",
                                 "/api/login",
+                                "/api/logout",
                                 "/api/kakao/login",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",

@@ -9,6 +9,9 @@ import lombok.Getter;
 @Schema(description = "로그인 응답 DTO")
 public class LoginResponseDto {
 
-    @Schema(description = "JWT token", example = "eyJhbGciOiJIUzI1NiJ9...")
-    private String token;
+    @Schema(description = "Access Token", example = "eyJhbGciOiJIUzI1NiJ9...")
+    private String accessToken;
+
+    @Schema(description = "Refresh Token", example = "eyJhbGciOiJIUzI1NiJ9...")
+    private String refreshToken;
 }

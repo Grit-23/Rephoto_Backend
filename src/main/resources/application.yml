@@ -47,7 +47,7 @@ kakao:
 
 ai:
   server:
-    url: http://52.79.210.103:8000
+    url: http://3.35.45.5:8000
   #실제 배포 시 배포 주소로 변경
   #ex) https://ai.myservice.com
 

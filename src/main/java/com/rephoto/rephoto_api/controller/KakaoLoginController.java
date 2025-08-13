@@ -38,7 +38,6 @@ public class KakaoLoginController {
             @ApiResponse(responseCode = "500", description = "서버 오류 (로그인 처리 실패)", content = @Content)
     })
     public ResponseEntity<LoginResponseDto> kakaoLogin(@RequestBody KakaoLoginRequestDto request) {
-        LoginResponseDto response = kakaoLoginService.kakaoLogin(request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(kakaoLoginService.kakaoLogin(request));
     }
 }

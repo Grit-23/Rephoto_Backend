@@ -1,6 +1,6 @@
 package com.rephoto.rephoto_api.controller;
 
-import com.rephoto.rephoto_api.dto.CaptionResponse;
+import com.rephoto.rephoto_api.dto.ImageCaptionResponse;
 import com.rephoto.rephoto_api.service.AiService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +19,11 @@ public class AiController {
 
     private final AiService aiService;
 
-    @PostMapping("/caption")
-    public ResponseEntity<CaptionResponse> generateCaption(
+    @PostMapping("/caption/generate")
+    public ResponseEntity<ImageCaptionResponse> generateCaption(
             @RequestParam("file")MultipartFile file
             ){
-        CaptionResponse response = aiService.generateCaption(file);
+        ImageCaptionResponse response = aiService.generateCaption(file);
         return ResponseEntity.ok(response);
     }
 }

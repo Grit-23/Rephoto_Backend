@@ -1,6 +1,8 @@
 package com.rephoto.rephoto_api.service;
 
-import com.rephoto.rephoto_api.dto.CaptionResponse;
+import com.rephoto.rephoto_api.dto.EmbeddingRequest;
+import com.rephoto.rephoto_api.dto.EmbeddingResponse;
+import com.rephoto.rephoto_api.dto.ImageCaptionResponse;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +17,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,7 +27,7 @@ public class AiService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public CaptionResponse generateCaption(MultipartFile file) {
+    public ImageCaptionResponse generateCaption(MultipartFile file) {
         try {
             // 파일 ByteArrayResource로 변환
             ByteArrayResource fileResource = new ByteArrayResource(file.getBytes()) {
@@ -49,12 +46,21 @@ public class AiService {
 
             // AI 서버 호출
             String url = aiUrl + "/api/ai/caption/generate";
-            ResponseEntity<CaptionResponse> response = restTemplate.exchange(
+            ResponseEntity<ImageCaptionResponse> response = restTemplate.exchange(
                     url,
                     HttpMethod.POST,
                     requestEntity,
-                    CaptionResponse.class
+                    ImageCaptionResponse.class
             );
+
+            ImageCaptionResponse captionResponse = response.getBody();
+
+            //임베딩 API 호출
+            if (captionResponse != null && captionResponse.getExplanation() != null) {
+                EmbeddingResponse embeddingResponse = generateEmbedding(captionResponse.getExplanation());
+                captionResponse.setExplanation_embedding(embeddingResponse.getEmbedding());
+            }
+
             return response.getBody();
 
         } catch (HttpClientErrorException.UnprocessableEntity e) {
@@ -63,6 +69,33 @@ public class AiService {
         } catch (Exception e) {
             log.error("AI caption 생성 실패", e);
             throw new RuntimeException("AI caption 생성 중 오류 발생", e);
+        }
+    }
+
+    public EmbeddingResponse generateEmbedding(String text) {
+        try {
+            EmbeddingRequest embeddingRequest = new EmbeddingRequest(text);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<EmbeddingRequest> requestEntity = new HttpEntity<>(embeddingRequest, headers);
+
+            String url = aiUrl + "/api/ai/embedding/embed-text";
+            ResponseEntity<EmbeddingResponse> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    requestEntity,
+                    EmbeddingResponse.class
+            );
+
+            return response.getBody();
+        } catch (HttpClientErrorException.UnprocessableEntity e) {
+            log.error("AI 서버 422 응답 (임베딩): {}", e.getResponseBodyAsString());
+            throw new CustomException(ErrorCode.AI_VALIDATION_ERROR);
+        } catch (Exception e) {
+            log.error("AI 임베딩 생성 실패", e);
+            throw new RuntimeException("AI 임베딩 생성 중 오류 발생", e);
         }
     }
 }

@@ -4,7 +4,6 @@ import com.rephoto.rephoto_api.client.AiClient;
 import com.rephoto.rephoto_api.domain.Description;
 import com.rephoto.rephoto_api.domain.Photo;
 import com.rephoto.rephoto_api.domain.User;
-import com.rephoto.rephoto_api.dto.CaptionResponse;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
 import com.rephoto.rephoto_api.repository.DescriptionRepository;
@@ -12,8 +11,6 @@ import com.rephoto.rephoto_api.repository.PhotoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +45,7 @@ public class DescriptionService {
         }
     }
 
+/*
     // 테스트용 임시 설명 생성 코드
     @Transactional
     public void generateDescriptionByAi(Long photoId) {
@@ -94,4 +92,6 @@ public class DescriptionService {
             throw new RuntimeException(e); //500 에러 처리
         }
     }
+
+ */
 }

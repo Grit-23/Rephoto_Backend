@@ -37,6 +37,7 @@ public class DescriptionController {
         return ResponseEntity.ok(description);
     }
 
+    /*
     @PostMapping("/{photoId}/generate")
     @Operation(summary = "설명 생성 요청", description = "photoId로 설명이 없는 사진에 대해 AI에 설명 생성 요청")
     @ApiResponses(value = {
@@ -49,5 +50,7 @@ public class DescriptionController {
         descriptionService.generateDescriptionByAi(photoId);
         return ResponseEntity.ok(" AI로 설명 생성 완료.");
     }
+
+     */
 
 }

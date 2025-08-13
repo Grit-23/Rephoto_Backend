@@ -7,9 +7,10 @@ import java.util.List;
 
 @Data
 @Schema(description = "AI 설명, 태그, 임베딩 생성 응답 DTO")
-public class CaptionResponse {
+public class ImageCaptionResponse {
 
-    private String caption;
+    private String explanation;
     private List<String> tags;
-    private List<Double> embedding;
+    private List<Double> explanation_embedding;
+    private boolean private_info;
 }

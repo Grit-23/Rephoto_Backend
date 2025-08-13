@@ -91,6 +91,8 @@ public class DescriptionService {
             // 4) 태그 적용
             tagCommandService.applyTagsToPhoto(photo, ai.getTagNames());
 
+
+
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {

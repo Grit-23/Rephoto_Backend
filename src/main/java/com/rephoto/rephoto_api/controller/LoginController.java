@@ -45,7 +45,6 @@ public class LoginController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류 (토큰 생성 실패 등)", content = @Content)
     })
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request) {
-        String token = loginService.login(request);
-        return ResponseEntity.ok(new LoginResponseDto(token));
+        return ResponseEntity.ok(loginService.login(request));
     }
 }

@@ -3,6 +3,9 @@ package com.rephoto.rephoto_api.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -27,5 +30,8 @@ public class User {
 
     @Column(nullable = false)
     private boolean isLoggedIn; // 로그인 상태 여부 확인용
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RefreshToken> refreshTokens = new ArrayList<>();
 
 }

@@ -1,19 +1,23 @@
 package com.rephoto.rephoto_api.service;
 
+import com.rephoto.rephoto_api.domain.RefreshToken;
 import com.rephoto.rephoto_api.domain.User;
 import com.rephoto.rephoto_api.dto.KakaoLoginRequestDto;
 import com.rephoto.rephoto_api.dto.LoginResponseDto;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
 import com.rephoto.rephoto_api.jwt.JwtUtil;
+import com.rephoto.rephoto_api.jwt.TokenHash;
 import com.rephoto.rephoto_api.kakao.KakaoApiClient;
 import com.rephoto.rephoto_api.kakao.KakaoInfoResponse;
+import com.rephoto.rephoto_api.repository.RefreshTokenRepository;
 import com.rephoto.rephoto_api.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
 import java.util.UUID;
 
 @Service
@@ -24,6 +28,8 @@ public class KakaoLoginService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final TokenHash tokenHash;
 
     @Transactional
     public LoginResponseDto kakaoLogin(KakaoLoginRequestDto kakaoRequestDto) {
@@ -46,8 +52,29 @@ public class KakaoLoginService {
                             .username(kakaoNickname)
                             .build()));
 
-            String token = jwtUtil.createToken(user.getLoginId());
-            return new LoginResponseDto(token);
+            // 기존 유저의 경우 로그인여부 true로 저장
+            if (!Boolean.TRUE.equals(user.isLoggedIn())) {
+                user.setLoggedIn(true);
+                userRepository.save(user);
+            }
+
+
+            // 토큰 발급
+            String accessToken = jwtUtil.createAccessToken(user.getLoginId());
+            String refreshToken = jwtUtil.createRefreshToken(user.getLoginId());
+
+            // RefreshToken db에 저장
+            RefreshToken rt = RefreshToken.builder()
+                    .jti(jwtUtil.getJti(refreshToken))
+                    .user(user)
+                    .tokenHash(tokenHash.sha256(refreshToken))
+                    .expiresAt(jwtUtil.parse(refreshToken).getExpiration()
+                            .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                    .revoked(false)
+                    .build();
+            refreshTokenRepository.save(rt);
+
+            return new LoginResponseDto(accessToken, refreshToken);
 
         } catch (CustomException e) {
             throw e;

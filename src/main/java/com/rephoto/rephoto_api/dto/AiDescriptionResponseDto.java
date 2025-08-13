@@ -27,4 +27,7 @@ public class AiDescriptionResponseDto {
 
     @Schema(description = "설명을 벡터화한 숫자", example = "[0.234, 0.878, -0.2345 ...]")
     private List<Double> vector; // 이거 맞는지 모르겟지만 일단 햇슴
+
+    @Schema(description = "민감 정보 여부", example = "true")
+    private boolean isPrivate;
 }

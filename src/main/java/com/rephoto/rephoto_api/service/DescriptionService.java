@@ -89,6 +89,8 @@ public class DescriptionService {
                 tagCommandService.applyTagsToPhoto(photo, ai.getTags());
             }
 
+
+
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {

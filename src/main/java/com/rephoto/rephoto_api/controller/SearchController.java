@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/search")
-@Tag(name = "검색어 입력 API", description = "AI 기반 검색어 입력 기록")
+@Tag(name = "검색어 입력 API", description = "AI 기반 사진 검색 수행")
 public class SearchController {
 
     private final SearchService searchService;
 
     @PostMapping
-    @Operation(summary = "검색어 입력", description = "사용자가 검색어를 입력하면 쿼리 변수에 기록으로 저장.")
+    @Operation(summary = "검색어 입력", description = "사용자가 입력한 검색어를 바탕으로 db에서 사진 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "검색어 입력 성공",
                     content = @Content(schema = @Schema(implementation = SearchResponseDto.class))),

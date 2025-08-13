@@ -4,7 +4,6 @@ import com.rephoto.rephoto_api.client.AiClient;
 import com.rephoto.rephoto_api.domain.Description;
 import com.rephoto.rephoto_api.domain.Photo;
 import com.rephoto.rephoto_api.domain.User;
-import com.rephoto.rephoto_api.dto.AiDescriptionResponseDto;
 import com.rephoto.rephoto_api.dto.CaptionResponse;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
@@ -14,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.Collections;
 
 @Service

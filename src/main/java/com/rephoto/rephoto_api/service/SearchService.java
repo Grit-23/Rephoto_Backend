@@ -3,7 +3,6 @@ package com.rephoto.rephoto_api.service;
 import com.rephoto.rephoto_api.domain.Photo;
 import com.rephoto.rephoto_api.domain.PhotoTag;
 import com.rephoto.rephoto_api.domain.User;
-import com.rephoto.rephoto_api.dto.SearchRequestDto;
 import com.rephoto.rephoto_api.dto.SearchResponseDto;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
@@ -39,7 +38,7 @@ public class SearchService {
             // 3. 해당 유저의 모든 사진 조회
             List<Photo> userPhotos = photoRepository.findByUser_UserId(userId);
 
-            // 4. Description에서 vector가 있는 것만 필터링
+            // 4. Description에서 embedding 있는 것만 필터링
             List<Photo> validPhotos = userPhotos.stream()
                     .filter(photo -> descriptionRepository.findByPhoto(photo)
                             .map(desc -> desc.getEmbedding() != null)
@@ -47,13 +46,19 @@ public class SearchService {
                     .toList();
 
             // 5. 임시 결과 도출 (나중에 수학 계산 공식 넣기)
-            List<Long> photoIds = validPhotos.stream()
-                    .map(Photo::getPhotoId)
-                    .sorted()
+            List<SearchResponseDto.SearchResults> results = validPhotos.stream()
+                    .sorted(Comparator.comparing(Photo::getPhotoId))
                     .limit(10)
+                    .map(p -> SearchResponseDto.SearchResults.builder()
+                            .photoId(p.getPhotoId())
+                            .imageUrl(p.getImageUrl())
+                            .build())
                     .toList();
 
-            return new SearchResponseDto(query, photoIds);
+            return SearchResponseDto.builder()
+                    .query(query)
+                    .searchResults(results)
+                    .build();
 
         } catch (CustomException e) {
             throw e;
@@ -97,12 +102,18 @@ public class SearchService {
                 }
             }
 
-            List<Long> photoIds = resultPhotos.stream()
-                    .map(Photo::getPhotoId)
-                    .sorted()
+            List<SearchResponseDto.SearchResults> results = resultPhotos.stream()
+                    .sorted(Comparator.comparing(Photo::getPhotoId))
+                    .map(p -> SearchResponseDto.SearchResults.builder()
+                            .photoId(p.getPhotoId())
+                            .imageUrl(p.getImageUrl())
+                            .build())
                     .toList();
 
-            return new SearchResponseDto(tagQuery, photoIds);
+            return SearchResponseDto.builder()
+                    .query(tagQuery)
+                    .searchResults(results)
+                    .build();
 
         } catch (CustomException e) {
             throw e;

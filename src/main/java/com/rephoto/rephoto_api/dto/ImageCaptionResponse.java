@@ -11,6 +11,8 @@ import java.util.List;
 public class ImageCaptionResponse {
 
     private String explanation;
+
+    @JsonProperty("tags")
     private List<String> tags;
 
     @JsonProperty("explanation_embedding")

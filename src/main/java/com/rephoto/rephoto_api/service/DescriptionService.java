@@ -84,6 +84,8 @@ public class DescriptionService {
                     if (aiResponse.getTags() != null && !aiResponse.getTags().isEmpty()) {
                         tagCommandService.applyTagsToPhoto(photo, aiResponse.getTags());
                     }
+                    log.info("AI 응답 태그: {}", aiResponse.getTags());
+
 
                 } catch (Exception e) {
                     log.error("AI 설명 생성 실패: photoId={}", photo.getPhotoId(), e);

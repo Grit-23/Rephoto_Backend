@@ -33,18 +33,17 @@ public class UserController {
     private final UserService userService;
 
     // ---------- 회원 정보 조회 ----------
-    @GetMapping("/{userId}")
-    @Operation(summary = "회원 정보 조회", description = "userId로 회원 정보 조회. 현재 로그인한 사용자 본인만 조회 가능.")
+    @GetMapping
+    @Operation(summary = "회원 정보 조회", description = "AccessToken으로 회원 정보 조회. 본인만 조회 가능.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공"),
             @ApiResponse(responseCode = "401", description = "접근 권한 없음", content = @Content),
             @ApiResponse(responseCode = "404", description = "회원 정보를 찾을 수 없음", content = @Content)
     })
     public ResponseEntity<UserInfoResponseDto> getUserInfo(
-            @PathVariable Long userId,
             @AuthenticationPrincipal User currentUser
     ) {
-        User user = userService.getUserInfo(userId, currentUser);
+        User user = userService.getUserInfo(currentUser);
         return ResponseEntity.ok(UserInfoResponseDto.from(user));
     }
 

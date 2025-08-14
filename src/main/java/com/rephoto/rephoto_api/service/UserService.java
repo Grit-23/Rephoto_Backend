@@ -18,9 +18,9 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     // 회원 정보 조회
-    public User getUserInfo(Long userId, User currentUser) {
+    public User getUserInfo(User currentUser) {
         try {
-            User user = userRepository.findById(userId)
+            User user = userRepository.findById(currentUser.getUserId())
                     .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
             if (!user.getUserId().equals(currentUser.getUserId())) {

@@ -39,7 +39,7 @@ public class PhotoResponseDto {
     private String fileName;
 
     @Schema(description = "사진 태그 모음", example = "(바다,하늘)")
-    private List<PhotoTag> tags;
+    private List<String> tags;
 
     public static PhotoResponseDto fromEntity(Photo photo) {
         return PhotoResponseDto.builder()
@@ -50,7 +50,9 @@ public class PhotoResponseDto {
                 .longitude(photo.getLongitude())
                 .createdAt(photo.getCreatedAt())
                 .fileName(photo.getFileName())
-                .tags(photo.getPhotoTags())
+                .tags(photo.getPhotoTags().stream()
+                        .map(photoTag -> photoTag.getTag().getTagName()) // ✅ Tag 엔티티에서 tagName만 추출
+                        .toList())
                 .build(); // 필요한 경우 latitude 등도 매핑 가능
     }
 }

@@ -14,7 +14,7 @@ import lombok.Setter;
 @Schema(description = "회원 정보 수정 요청 DTO")
 public class UserUpdateRequestDto {
 
-    @Schema(description = "변경할 사용자 이름", example = "홍길동")
+    @Schema(description = "변경할 사용자 이름", example = "최형원")
     private String username;
 
     @Schema(description = "변경할 비밀번호", example = "newPassword123!")

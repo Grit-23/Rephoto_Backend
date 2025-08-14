@@ -1,6 +1,7 @@
 package com.rephoto.rephoto_api.controller;
 
 import com.rephoto.rephoto_api.domain.User;
+import com.rephoto.rephoto_api.dto.UserDeleteRequestDto;
 import com.rephoto.rephoto_api.dto.UserInfoResponseDto;
 import com.rephoto.rephoto_api.dto.UserUpdateRequestDto;
 import com.rephoto.rephoto_api.exception.CustomException;
@@ -59,15 +60,14 @@ public class UserController {
     })
     public ResponseEntity<Map<String, String>> deleteUser(
             @AuthenticationPrincipal User currentUser,
-            @RequestBody(required = false) Map<String, String> requestBody
+            @RequestBody(required = false) UserDeleteRequestDto request
     ) {
-        String password = (requestBody != null) ? requestBody.get("password") : null;
-        userService.deleteUser(currentUser, password);
+        userService.deleteUser(currentUser, request);
         return ResponseEntity.ok(Map.of("message", "회원 탈퇴가 완료되었습니다."));
     }
 
     // ---------- 회원 정보 수정 ----------
-    @PutMapping("/{userId}")
+    @PutMapping
     @Operation(summary = "회원 정보 수정", description = "userId로 회원 정보를 수정. 본인 계정만 수정 가능")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 수정 성공", content = @Content),
@@ -77,11 +77,10 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "회원 정보 수정 중 서버 오류", content = @Content)
     })
     public ResponseEntity<Map<String, String>> updateUser(
-            @PathVariable Long userId,
             @RequestBody UserUpdateRequestDto requestDto,
             @AuthenticationPrincipal User currentUser
     ) {
-        userService.updateUser(userId, currentUser, requestDto);
+        userService.updateUser(currentUser, requestDto);
         return ResponseEntity.ok(Map.of("message", "회원 정보가 성공적으로 수정되었습니다."));
     }
 }

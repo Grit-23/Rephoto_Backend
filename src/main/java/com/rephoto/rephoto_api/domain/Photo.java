@@ -14,8 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "Photo")
-
-
 public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

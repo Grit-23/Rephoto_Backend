@@ -1,6 +1,7 @@
 package com.rephoto.rephoto_api.service;
 
 import com.rephoto.rephoto_api.domain.User;
+import com.rephoto.rephoto_api.dto.UserDeleteRequestDto;
 import com.rephoto.rephoto_api.dto.UserUpdateRequestDto;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
@@ -40,11 +41,11 @@ public class UserService {
     }
 
 
-    public void deleteUser(User currentUser, String password) {
+    public void deleteUser(User currentUser, UserDeleteRequestDto request) {
         try {
             // 1. 존재하는 사용자 ID인지 확인
             Long userId = currentUser.getUserId();
-            User targetUser = userRepository.findById(currentUser.getUserId())
+            User targetUser = userRepository.findById(userId)
                     .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
             // 2. 로그인 사용자와 요청 대상 ID가 일치하는지 확인
@@ -53,6 +54,7 @@ public class UserService {
             }
 
             // 3. 비밀번호 재입력 (본인인지 재확인)
+            String password = (request != null) ? request.getPassword() : null;
             if (password == null || !passwordEncoder.matches(password, targetUser.getPassword())) {
                 throw new CustomException(ErrorCode.REAUTH_REQUIRED);
             }
@@ -60,7 +62,6 @@ public class UserService {
             refreshTokenRepository.deleteAllByUserId(userId);
 
             userRepository.deleteById(userId);
-
 
         } catch (CustomException e) {
             throw e;
@@ -72,9 +73,9 @@ public class UserService {
 
     // 회원 정보 수정
     @Transactional
-    public void updateUser(Long userId, User currentUser, UserUpdateRequestDto requestDto) {
+    public void updateUser(User currentUser, UserUpdateRequestDto requestDto) {
         try {
-            User user = userRepository.findById(userId)
+            User user = userRepository.findById(currentUser.getUserId())
                     .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
             if (!user.getUserId().equals(currentUser.getUserId())) {

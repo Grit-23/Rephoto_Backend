@@ -3,6 +3,7 @@ package com.rephoto.rephoto_api.service;
 import com.rephoto.rephoto_api.domain.Photo;
 import com.rephoto.rephoto_api.domain.PhotoTag;
 import com.rephoto.rephoto_api.domain.User;
+import com.rephoto.rephoto_api.dto.EmbeddingResponse;
 import com.rephoto.rephoto_api.dto.SearchResponseDto;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ public class SearchService {
     private final PhotoRepository photoRepository;
     private final UserRepository userRepository;
     private final PhotoTagRepository photoTagRepository;
+    private final AiService aiService;
 
     public SearchResponseDto searchPhotosByQuery(String query, Long userId) {
         try {
@@ -35,23 +38,35 @@ public class SearchService {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-            // 3. 해당 유저의 모든 사진 조회
+            // 3. 쿼리를 ai로 전송하여 벡터화(임베딩 값 생성)
+            EmbeddingResponse queryEmbeddingResponse = aiService.generateEmbedding(query);
+            List<Double> queryEmbedding = queryEmbeddingResponse.getEmbedding();
+            if (queryEmbedding == null || queryEmbedding.isEmpty()) {
+                throw new CustomException(ErrorCode.AI_EMBEDDING_EMPTY);
+            }
+
+            // 4. 해당 유저의 모든 사진 조회
             List<Photo> userPhotos = photoRepository.findByUser_UserId(userId);
 
-            // 4. Description에서 embedding 있는 것만 필터링
-            List<Photo> validPhotos = userPhotos.stream()
-                    .filter(photo -> descriptionRepository.findByPhoto(photo)
-                            .map(desc -> desc.getEmbedding() != null)
-                            .orElse(false))
-                    .toList();
+            // 5. 그 중 embedding 필드에 값이 있는 것만 필터링
+            List<Photo> photosWithEmbedding = userPhotos.stream()
+                    .filter(photo -> photo.getDescription() != null
+                            && photo.getDescription().getEmbedding() != null
+                            && !photo.getDescription().getEmbedding().isEmpty())
+                    .collect(Collectors.toList());
 
-            // 5. 임시 결과 도출 (나중에 수학 계산 공식 넣기)
-            List<SearchResponseDto.SearchResults> results = validPhotos.stream()
-                    .sorted(Comparator.comparing(Photo::getPhotoId))
+            // 6. 코사인 유사도 계산
+            List<SearchResponseDto.SearchResults> results = photosWithEmbedding.stream()
+                    .map(photo -> {
+                        List<Double> photoVec = photo.getDescription().getEmbedding();
+                        double sim = cosineSimilarity(queryEmbedding, photoVec); // v1, v2 차원 다르면 CustomException 발생
+                        return new AbstractMap.SimpleEntry<>(photo, sim);
+                    })
+                    .sorted((a, b) -> Double.compare(b.getValue(), a.getValue())) // 유사도 내림차순
                     .limit(10)
-                    .map(p -> SearchResponseDto.SearchResults.builder()
-                            .photoId(p.getPhotoId())
-                            .imageUrl(p.getImageUrl())
+                    .map(entry -> SearchResponseDto.SearchResults.builder()
+                            .photoId(entry.getKey().getPhotoId())
+                            .imageUrl(entry.getKey().getImageUrl())
                             .build())
                     .toList();
 
@@ -120,5 +135,19 @@ public class SearchService {
         } catch (Exception e) {
             throw new RuntimeException("태그 검색 중 서버 오류 발생", e);
         }
+    }
+
+    // 코사인 유사도 계산식
+    private double cosineSimilarity(List<Double> v1, List<Double> v2) {
+        if (v1.size() != v2.size()) {
+            throw new CustomException(ErrorCode.VECTOR_DIMENSION_MISMATCH);
+        }
+        double dot = 0.0, normV1 = 0.0, normV2 = 0.0;
+        for (int i = 0; i < v1.size(); i++) {
+            dot += v1.get(i) * v2.get(i);
+            normV1 += Math.pow(v1.get(i), 2);
+            normV2 += Math.pow(v2.get(i), 2);
+        }
+        return dot / (Math.sqrt(normV1) * Math.sqrt(normV2));
     }
 }

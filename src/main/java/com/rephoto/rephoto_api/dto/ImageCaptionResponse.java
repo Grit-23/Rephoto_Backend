@@ -19,5 +19,5 @@ public class ImageCaptionResponse {
     private List<Double> explanation_embedding;
 
     @JsonProperty("private_info")
-    private boolean private_info;
+    private boolean privateInfo;
 }

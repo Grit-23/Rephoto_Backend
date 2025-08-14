@@ -61,7 +61,8 @@ public enum ErrorCode {
     TAG_ALREADY_EXISTS(HttpStatus.CONFLICT, "이 사진에 해당 태그가 이미 존재합니다"),
 
     // AI 관련
-    AI_VALIDATION_ERROR(HttpStatus.UNPROCESSABLE_ENTITY, "AI 캡션 생성 요청 값이 유효하지 않습니다.")
+    AI_VALIDATION_ERROR(HttpStatus.UNPROCESSABLE_ENTITY, "AI 캡션 생성 요청 값이 유효하지 않습니다."),
+    AI_EMBEDDING_EMPTY(HttpStatus.BAD_REQUEST, "AI 임베딩 생성 실패: 검색 쿼리 벡터화에 실패하였습니다.")
     ;
 
     private final HttpStatus httpStatus;

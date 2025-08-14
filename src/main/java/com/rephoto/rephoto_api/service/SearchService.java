@@ -42,7 +42,7 @@ public class SearchService {
             EmbeddingResponse queryEmbeddingResponse = aiService.generateEmbedding(query);
             List<Double> queryEmbedding = queryEmbeddingResponse.getEmbedding();
             if (queryEmbedding == null || queryEmbedding.isEmpty()) {
-                throw new RuntimeException("AI 임베딩 생성 실패: 빈 벡터");
+                throw new CustomException(ErrorCode.AI_EMBEDDING_EMPTY);
             }
 
             // 4. 해당 유저의 모든 사진 조회

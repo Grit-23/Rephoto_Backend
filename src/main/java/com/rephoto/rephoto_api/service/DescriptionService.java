@@ -86,6 +86,11 @@ public class DescriptionService {
                     }
                     log.info("AI 응답 태그: {}", aiResponse.getTags());
 
+                    // 개인정보 유무 저장
+                    photo.setPrivate(aiResponse.isPrivateInfo());
+                    log.info("photoId={} -> isPrivate 값 저장됨: {}",
+                            photo.getPhotoId(), photo.isPrivate());
+
 
                 } catch (Exception e) {
                     log.error("AI 설명 생성 실패: photoId={}", photo.getPhotoId(), e);

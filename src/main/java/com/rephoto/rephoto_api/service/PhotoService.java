@@ -6,6 +6,8 @@ import com.rephoto.rephoto_api.domain.User;
 import com.rephoto.rephoto_api.dto.PhotoBatchRequestDto;
 import com.rephoto.rephoto_api.dto.PhotoRequestDto;
 import com.rephoto.rephoto_api.dto.PhotoResponseDto;
+import com.rephoto.rephoto_api.exception.CustomException;
+import com.rephoto.rephoto_api.exception.ErrorCode;
 import com.rephoto.rephoto_api.repository.DescriptionRepository;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
 import com.rephoto.rephoto_api.repository.PhotoTagRepository;
@@ -85,7 +87,7 @@ public class PhotoService {
 
     public PhotoResponseDto getPhoto(Long photoId) {
         Photo photo = photoRepository.findByPhotoId(photoId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 사진이 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.PHOTO_NOT_FOUND));
         return PhotoResponseDto.fromEntity(photo);
     }
 

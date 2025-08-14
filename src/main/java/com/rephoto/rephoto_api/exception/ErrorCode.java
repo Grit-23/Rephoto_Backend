@@ -18,6 +18,7 @@ public enum ErrorCode {
     UNAUTHORIZED_UPDATE_ACCESS(HttpStatus.FORBIDDEN, "다른 사용자의 정보를 수정할 수 없습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
     UPDATE_INFO_INVALID(HttpStatus.BAD_REQUEST, "비밀번호와 사용자 이름은 필수입니다."),
+    REAUTH_REQUIRED(HttpStatus.UNAUTHORIZED, "비밀번호가 올바르지 않습니다."),
 
     // 탈퇴
     UNAUTHORIZED_DELETE(HttpStatus.FORBIDDEN, "다른 사용자의 탈퇴 요청은 불가능합니다."),

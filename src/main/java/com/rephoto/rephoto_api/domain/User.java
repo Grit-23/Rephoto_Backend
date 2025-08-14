@@ -31,7 +31,7 @@ public class User {
     @Column(nullable = false)
     private boolean isLoggedIn; // 로그인 상태 여부 확인용
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<RefreshToken> refreshTokens = new ArrayList<>();
 
 }

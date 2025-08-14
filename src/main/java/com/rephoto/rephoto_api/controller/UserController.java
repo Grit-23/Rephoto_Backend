@@ -34,7 +34,7 @@ public class UserController {
 
     // ---------- 회원 정보 조회 ----------
     @GetMapping
-    @Operation(summary = "회원 정보 조회", description = "AccessToken으로 회원 정보 조회. 본인만 조회 가능.")
+    @Operation(summary = "회원 정보 조회", description = "JWT 토큰으로 회원 인증 후 정보 조회 처리")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공"),
             @ApiResponse(responseCode = "401", description = "접근 권한 없음", content = @Content),
@@ -49,8 +49,8 @@ public class UserController {
 
 
     // ---------- 회원 탈퇴 ----------
-    @DeleteMapping("/{userId}")
-    @Operation(summary = "회원 탈퇴", description = "userId로 회원 탈퇴.")
+    @DeleteMapping
+    @Operation(summary = "회원 탈퇴", description = "JWT 토큰으로 회원 인증 후 탈퇴 처리")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공", content = @Content),
             @ApiResponse(responseCode = "401", description = "유효하지 않은 접근(본인이 아닌 계정 접근)", content = @Content),
@@ -58,10 +58,11 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "회원 탈퇴 실패(서버 오류)", content = @Content)
     })
     public ResponseEntity<Map<String, String>> deleteUser(
-            @PathVariable Long userId,
-            @AuthenticationPrincipal User currentUser
+            @AuthenticationPrincipal User currentUser,
+            @RequestBody(required = false) Map<String, String> requestBody
     ) {
-        userService.deleteUser(userId, currentUser);
+        String password = (requestBody != null) ? requestBody.get("password") : null;
+        userService.deleteUser(currentUser, password);
         return ResponseEntity.ok(Map.of("message", "회원 탈퇴가 완료되었습니다."));
     }
 

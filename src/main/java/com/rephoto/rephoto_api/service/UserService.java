@@ -4,6 +4,7 @@ import com.rephoto.rephoto_api.domain.User;
 import com.rephoto.rephoto_api.dto.UserUpdateRequestDto;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
+import com.rephoto.rephoto_api.repository.RefreshTokenRepository;
 import com.rephoto.rephoto_api.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +17,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenRepository refreshTokenRepository;
+
 
     // 회원 정보 조회
-    public User getUserInfo(Long userId, User currentUser) {
+    public User getUserInfo(User currentUser) {
         try {
-            User user = userRepository.findById(userId)
+            User user = userRepository.findById(currentUser.getUserId())
                     .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
             if (!user.getUserId().equals(currentUser.getUserId())) {
@@ -37,10 +40,11 @@ public class UserService {
     }
 
 
-    public void deleteUser(Long targetUserId, User currentUser) {
+    public void deleteUser(User currentUser, String password) {
         try {
             // 1. 존재하는 사용자 ID인지 확인
-            User targetUser = userRepository.findById(targetUserId)
+            Long userId = currentUser.getUserId();
+            User targetUser = userRepository.findById(currentUser.getUserId())
                     .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
             // 2. 로그인 사용자와 요청 대상 ID가 일치하는지 확인
@@ -48,8 +52,15 @@ public class UserService {
                 throw new CustomException(ErrorCode.UNAUTHORIZED_DELETE);
             }
 
-            // 3. 사용자 삭제
-            userRepository.deleteById(targetUserId);
+            // 3. 비밀번호 재입력 (본인인지 재확인)
+            if (password == null || !passwordEncoder.matches(password, targetUser.getPassword())) {
+                throw new CustomException(ErrorCode.REAUTH_REQUIRED);
+            }
+
+            refreshTokenRepository.deleteAllByUserId(userId);
+
+            userRepository.deleteById(userId);
+
 
         } catch (CustomException e) {
             throw e;

@@ -3,8 +3,11 @@ package com.rephoto.rephoto_api.repository;
 import com.rephoto.rephoto_api.domain.Photo;
 import com.rephoto.rephoto_api.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,6 +39,7 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
             Long userId, Double minLat, Double maxLat, Double minLng, Double maxLng
     );
     boolean existsByUserUserIdAndImageUrl(Long userId, String imageUrl);
+
 
 }
 

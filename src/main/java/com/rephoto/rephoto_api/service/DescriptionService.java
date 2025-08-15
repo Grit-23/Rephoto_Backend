@@ -97,15 +97,6 @@ public class DescriptionService {
                     // 실패한 건 넘어가고 다음 Description 처리
                 }
             }
-<<<<<<< HEAD
-=======
-
-        } catch (CustomException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e); //500 에러 처리
-        }
->>>>>>> bc5ed66 (photo error 처리)
     }
 }
 

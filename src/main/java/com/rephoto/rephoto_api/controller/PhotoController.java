@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,17 +31,16 @@ public class PhotoController {
     private final UserRepository userRepository;
     private final PhotoService photoService;
 
-    @PostMapping("/{userId}/batch")
+    @PostMapping("/batch")
     @Operation(summary = "초기 사진 일괄 업로드", description = "앱 첫 실행 시 사용자 사진을 한 번에 업로드")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "초기 배치 동기화 완료"),
             @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<?> photoBatch(@PathVariable("userId") Long userId,
-                                        @RequestBody PhotoBatchRequestDto request) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
+    public ResponseEntity<?> photoBatch(
+            @AuthenticationPrincipal User user,
+            @RequestBody PhotoBatchRequestDto request) {
 
         photoService.savePhotos(request.toPhotoRequestDtoList(), user);
         return ResponseEntity.ok("초기 배치 동기화 완료");
@@ -81,25 +81,25 @@ public class PhotoController {
         return ResponseEntity.ok("삭제 완료");
     }
 
-    @GetMapping("/users/{userId}")
+    @GetMapping
     @Operation(summary = "전체 사진 조회", description = "사용자의 모든 사진 리스트를 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "사진 목록 반환",
                     content = @Content(schema = @Schema(implementation = PhotoResponseDto.class)))
     })
-    public ResponseEntity<List<PhotoResponseDto>> PhotoList(@PathVariable("userId") Long userId) {
-        List<PhotoResponseDto> photoResponseDtos = photoService.getAllPhotos(userId);
+    public ResponseEntity<List<PhotoResponseDto>> PhotoList(@AuthenticationPrincipal User user) {
+        List<PhotoResponseDto> photoResponseDtos = photoService.getAllPhotos(user);
         return ResponseEntity.ok(photoResponseDtos);
     }
 
-    @GetMapping("/users/{userId}/warning")
+    @GetMapping("/warning")
     @Operation(summary = "민감 사진 조회", description = "민감(개인정보 포함)한 사진 리스트를 반환")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "민감 사진 목록 반환",
                     content = @Content(schema = @Schema(implementation = PhotoResponseDto.class)))
     })
-    public ResponseEntity<List<PhotoResponseDto>> PhotoWarning(@PathVariable("userId") Long userId) {
-        List<PhotoResponseDto> photoResponseDtos = photoService.getWarningPhotos(userId);
+    public ResponseEntity<List<PhotoResponseDto>> PhotoWarning(@AuthenticationPrincipal User user) {
+        List<PhotoResponseDto> photoResponseDtos = photoService.getWarningPhotos(user);
         return ResponseEntity.ok(photoResponseDtos);
     }
 }

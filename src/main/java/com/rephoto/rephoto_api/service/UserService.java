@@ -5,6 +5,8 @@ import com.rephoto.rephoto_api.dto.UserDeleteRequestDto;
 import com.rephoto.rephoto_api.dto.UserUpdateRequestDto;
 import com.rephoto.rephoto_api.exception.CustomException;
 import com.rephoto.rephoto_api.exception.ErrorCode;
+import com.rephoto.rephoto_api.repository.DescriptionRepository;
+import com.rephoto.rephoto_api.repository.PhotoRepository;
 import com.rephoto.rephoto_api.repository.RefreshTokenRepository;
 import com.rephoto.rephoto_api.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -18,6 +20,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PhotoRepository photoRepository;
+    private final DescriptionRepository descriptionRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
 
@@ -41,7 +45,7 @@ public class UserService {
     }
 
 
-    public void deleteUser(User currentUser, UserDeleteRequestDto request) {
+    public void deleteUser(User currentUser) {
         try {
             // 1. 존재하는 사용자 ID인지 확인
             Long userId = currentUser.getUserId();
@@ -53,13 +57,7 @@ public class UserService {
                 throw new CustomException(ErrorCode.UNAUTHORIZED_DELETE);
             }
 
-            // 3. 비밀번호 재입력 (본인인지 재확인)
-            String password = (request != null) ? request.getPassword() : null;
-            if (password == null || !passwordEncoder.matches(password, targetUser.getPassword())) {
-                throw new CustomException(ErrorCode.REAUTH_REQUIRED);
-            }
-
-            refreshTokenRepository.deleteAllByUserId(userId);
+            //refreshTokenRepository.deleteAllByUserId(userId);
 
             userRepository.deleteById(userId);
 

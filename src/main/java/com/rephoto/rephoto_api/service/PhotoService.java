@@ -51,8 +51,8 @@ public class PhotoService {
 
     }*/
 
-    public List<PhotoResponseDto> getAllPhotos(Long userId) {
-        List<Photo> photos = photoRepository.findByUser_UserId(userId);
+    public List<PhotoResponseDto> getAllPhotos(User user) {
+        List<Photo> photos = photoRepository.findByUser_UserId(user.getUserId());
 
         return photos.stream()
                 .map(photo -> PhotoResponseDto.builder()
@@ -68,9 +68,9 @@ public class PhotoService {
                 .toList();
     }
 
-    public List<PhotoResponseDto> getWarningPhotos(Long userId) {
+    public List<PhotoResponseDto> getWarningPhotos(User user) {
 
-        List<Photo> privatePhotos = photoRepository.findByUser_UserIdAndIsPrivateTrue(userId);
+        List<Photo> privatePhotos = photoRepository.findByUser_UserIdAndIsPrivateTrue(user.getUserId());
         return privatePhotos.stream()
                 .map(photo -> PhotoResponseDto.builder()
                         .photoId(photo.getPhotoId())

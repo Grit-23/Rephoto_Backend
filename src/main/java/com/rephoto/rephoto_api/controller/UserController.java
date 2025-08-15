@@ -59,10 +59,9 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "회원 탈퇴 실패(서버 오류)", content = @Content)
     })
     public ResponseEntity<Map<String, String>> deleteUser(
-            @AuthenticationPrincipal User currentUser,
-            @RequestBody(required = false) UserDeleteRequestDto request
+            @AuthenticationPrincipal User currentUser
     ) {
-        userService.deleteUser(currentUser, request);
+        userService.deleteUser(currentUser);
         return ResponseEntity.ok(Map.of("message", "회원 탈퇴가 완료되었습니다."));
     }
 

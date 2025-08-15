@@ -10,9 +10,6 @@ import java.util.List;
 @Schema(description = "초기 사진 배치 업로드 요청 DTO")
 public class PhotoBatchRequestDto {
 
-    @Schema(description = "사용자 ID", example = "1")
-    private Long userId;
-
     @Schema(description = "사진 메타데이터 목록")
     private List<PhotoMetadata> photos;
 

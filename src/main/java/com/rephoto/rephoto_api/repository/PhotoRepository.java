@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
-
+    long countByUser_UserId(Long userId);
     //Optional<Photo> findFirstByUser_UserIdOrderByCreatedAtDesc(Long userId);
     //현재 저장된 DB에서 가장 최신 날짜를 불러옴
 

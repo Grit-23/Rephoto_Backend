@@ -35,10 +35,11 @@ public class TagService {
     }
 
     @Transactional
-    public TagResponseDto addTag(Long userId, Long photoId, String tagName) {
+    public TagResponseDto addTag(Long photoId, String tagName) {
 
         Photo photo = photoRepository.findById(photoId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTO_NOT_FOUND));
+        Long userId = photo.getUser().getUserId();
         assertOwner(userId, photo);
         Tag tag = tagRepository.findByTagName(tagName)
                 .orElseGet(() -> tagRepository.save(new Tag(tagName))); // 없으면 저장
@@ -61,9 +62,10 @@ public class TagService {
     }
 
     @Transactional
-    public void deleteTag(Long userId, Long photoId, Long tagId) {
+    public void deleteTag(Long photoId, Long tagId) {
         Photo photo = photoRepository.findById(photoId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTO_NOT_FOUND));
+        Long userId = photo.getUser().getUserId();
         assertOwner(userId, photo);
 
         Tag tag = tagRepository.findByTagId(tagId)
@@ -82,9 +84,10 @@ public class TagService {
 
 
     @Transactional
-    public TagResponseDto replaceTag(Long userId, Long photoId, Long tagId, String newTagName) {
+    public TagResponseDto replaceTag(Long photoId, Long tagId, String newTagName) {
         Photo photo = photoRepository.findById(photoId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTO_NOT_FOUND));
+        Long userId = photo.getUser().getUserId();
         assertOwner(userId, photo);
 
         Tag oldTag = tagRepository.findByTagId(tagId)

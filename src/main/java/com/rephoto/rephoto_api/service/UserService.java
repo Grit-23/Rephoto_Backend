@@ -56,7 +56,7 @@ public class UserService {
             // 3. 비밀번호 재입력 (본인인지 재확인)
             String password = (request != null) ? request.getPassword() : null;
             if (password == null || !passwordEncoder.matches(password, targetUser.getPassword())) {
-                throw new CustomException(ErrorCode.REAUTH_REQUIRED);
+                throw new CustomException(ErrorCode.UNAUTHORIZED_DELETE);
             }
 
             refreshTokenRepository.deleteAllByUserId(userId);

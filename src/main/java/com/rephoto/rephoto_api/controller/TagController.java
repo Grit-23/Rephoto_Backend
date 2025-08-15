@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/tags/")
+@RequestMapping("/api/tags/{userId}")
 @RequiredArgsConstructor
 @Tag(name = "Tag API", description = "사진 태그 생성, 수정, 삭제 API")
 public class TagController {
@@ -32,9 +32,10 @@ public class TagController {
     @DeleteMapping("/{photoId}/{tagId}")
     public ResponseEntity<?> deleteTag(
             @Parameter(description = "사진 ID", example = "1") @PathVariable Long photoId,
-            @Parameter(description = "삭제할 태그 ID", example = "5") @PathVariable Long tagId
+            @Parameter(description = "삭제할 태그 ID", example = "5") @PathVariable Long tagId,
+            @Parameter(description = "유저 ID", example = "1") @PathVariable Long userId
     ) {
-        tagService.deleteTag(photoId, tagId);
+        tagService.deleteTag(userId,photoId, tagId);
         return ResponseEntity.ok("삭제 완료");
     }
 
@@ -51,9 +52,10 @@ public class TagController {
     public TagResponseDto updateTag(
             @Parameter(description = "사진 ID", example = "1") @PathVariable Long photoId,
             @Parameter(description = "수정할 태그 ID", example = "5") @PathVariable Long tagId,
+            @Parameter(description = "유저 ID", example = "1") @PathVariable Long userId,
             @RequestBody TagRequestDto requestDto
     ) {
-        return tagService.replaceTag(photoId, tagId, requestDto.getTagName());
+        return tagService.replaceTag(userId, photoId, tagId, requestDto.getTagName());
     }
 
     @Operation(
@@ -68,8 +70,9 @@ public class TagController {
     @PostMapping("/{photoId}")
     public TagResponseDto saveTag(
             @Parameter(description = "사진 ID", example = "1") @PathVariable Long photoId,
+            @Parameter(description = "유저 ID", example = "1") @PathVariable Long userId,
             @RequestBody TagRequestDto requestDto
     ) {
-        return tagService.addTag(photoId, requestDto.getTagName());
+        return tagService.addTag(userId, photoId, requestDto.getTagName());
     }
 }

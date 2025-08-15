@@ -55,6 +55,7 @@ public enum ErrorCode {
     TOO_MANY_TAGS(HttpStatus.BAD_REQUEST, "태그는 최대 20개까지 입력할 수 있습니다."),
     SEARCH_TAGS_REQUIRED(HttpStatus.BAD_REQUEST, "유효한 태그가 없습니다. '#'으로 시작하는 태그를 입력해주세요."),
     VECTOR_DIMENSION_MISMATCH(HttpStatus.BAD_REQUEST, "벡터 차원이 다릅니다."),
+    ALBUM_NOT_FOUND(HttpStatus.NOT_FOUND,"해당하는 앨범이 없습니다"),
     
     //태그 관련
     TAG_NOT_FOUND(HttpStatus.NOT_FOUND,"해당 태그가 존재하지 않습니다"),

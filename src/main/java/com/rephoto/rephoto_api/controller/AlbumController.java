@@ -33,7 +33,7 @@ public class AlbumController {
         return ResponseEntity.ok(albumService.getAllAlbums(userId));
     }
 
-    @GetMapping
+    @GetMapping("/search")
     @Operation(summary = "태그 기반 앨범 검색", description = "userId와 tag 키워드로 앨범을 검색하여 반환")
     public ResponseEntity<AlbumResponseDto> search(
             @RequestParam Long userId,

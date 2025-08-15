@@ -17,7 +17,7 @@ public class JwtUtil {
 
     private static final String SECRET_KEY = "GRIT_SECRET_123456789012345678901234"; // 최소 32바이트 권장
     private static final long ACCESS_EXP_MS  = 1000L * 60 * 30;         // 30분
-    private static final long REFRESH_EXP_MS = 1000L * 60 * 60 * 24 * 14; // 14일
+    private static final long REFRESH_EXP_MS = 1000L * 60 * 60 * 24 * 30; // 30일
 
     private static final String CLAIM_TOKEN_TYPE = "token_type";
 

@@ -44,7 +44,7 @@ public class TestImageInitializer implements CommandLineRunner{
                 Photo photo = new Photo();
                 photo.setUser(user);
                 photo.setImageUrl("https://example.com/test_photo.jpg");
-                photo.setPrivate(false);
+                photo.setPrivate(true);
                 photo.setLatitude(37.5665);
                 photo.setLongitude(126.9780);
                 photo.setFileName("test-photo-name");

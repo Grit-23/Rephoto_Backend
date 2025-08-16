@@ -60,6 +60,7 @@ public enum ErrorCode {
     //태그 관련
     TAG_NOT_FOUND(HttpStatus.NOT_FOUND,"해당 태그가 존재하지 않습니다"),
     TAG_ALREADY_EXISTS(HttpStatus.CONFLICT, "이 사진에 해당 태그가 이미 존재합니다"),
+    TAG_IS_NULL(HttpStatus.BAD_REQUEST, "태그가 null 입니다"),
 
     // AI 관련
     AI_VALIDATION_ERROR(HttpStatus.UNPROCESSABLE_ENTITY, "AI 캡션 생성 요청 값이 유효하지 않습니다."),

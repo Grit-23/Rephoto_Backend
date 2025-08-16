@@ -30,14 +30,12 @@ public interface PhotoTagRepository extends JpaRepository<PhotoTag, Long> {
 
     Optional<PhotoTag> findByPhotoAndTag(Photo photo, Tag tag);
 
-    void deleteByPhotoAndTag(Photo photo, Tag tag);
 
     boolean existsByPhotoAndTag(Photo photo, Tag tag);
 
     // userId + tagName 조합의 사진-태그 매핑 개수
     long countByPhoto_User_UserIdAndTag_TagName(Long userId, String tagName);
 
-    // photoId + tagId로 매핑 찾기 (수정/삭제용)
-    Optional<PhotoTag> findByPhoto_PhotoIdAndTag_TagId(Long photoId, Long tagId);
+    List<PhotoTag> findByPhoto(Photo photo);
 }
 

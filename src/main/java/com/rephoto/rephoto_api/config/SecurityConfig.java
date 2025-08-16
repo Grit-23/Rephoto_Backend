@@ -33,6 +33,7 @@ public class SecurityConfig {
                                 "/api/login",
                                 "/api/logout",
                                 "/api/kakao/login",
+                                "/api/auth/refresh",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",

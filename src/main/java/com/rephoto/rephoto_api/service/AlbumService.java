@@ -14,12 +14,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
-
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AlbumService {
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
     private final AlbumRepository albumRepository;
     private final PhotoTagRepository photoTagRepository;
     private final TagRepository tagRepository;
@@ -60,6 +65,9 @@ public class AlbumService {
     //Tag 가 10개 이상이면 앨범 생성
     @Transactional
     public void manageAlbumForTag(Long userId, String tagName) {
+
+        // 엔티티 매니저 이용 (주입 필요)
+        entityManager.flush(); // <- 카운트/exists 전에 반영 보장
 
         long count = photoTagRepository.countByPhoto_User_UserIdAndTag_TagName(userId, tagName);
         boolean exists = albumRepository.existsByUser_UserIdAndTag_TagName(userId, tagName);

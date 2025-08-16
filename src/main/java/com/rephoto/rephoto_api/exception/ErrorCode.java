@@ -63,7 +63,10 @@ public enum ErrorCode {
 
     // AI 관련
     AI_VALIDATION_ERROR(HttpStatus.UNPROCESSABLE_ENTITY, "AI 캡션 생성 요청 값이 유효하지 않습니다."),
-    AI_EMBEDDING_EMPTY(HttpStatus.BAD_REQUEST, "AI 임베딩 생성 실패: 검색 쿼리 벡터화에 실패하였습니다.")
+    AI_EMBEDDING_EMPTY(HttpStatus.BAD_REQUEST, "AI 임베딩 생성 실패: 검색 쿼리 벡터화에 실패하였습니다."),
+    AI_SERVER_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "AI 서버가 현재 사용 불가합니다. 잠시 후 다시 시도해 주세요."),
+    AI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "AI 서버 처리 중 알 수 없는 오류가 발생했습니다."),
+    AI_EMBEDDING_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "AI 임베딩 생성에 실패했습니다.")
     ;
 
     private final HttpStatus httpStatus;

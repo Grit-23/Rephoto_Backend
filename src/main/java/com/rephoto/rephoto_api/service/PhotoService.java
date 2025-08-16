@@ -53,18 +53,8 @@ public class PhotoService {
 
     public List<PhotoResponseDto> getAllPhotos(User user) {
         List<Photo> photos = photoRepository.findByUser_UserId(user.getUserId());
-
         return photos.stream()
-                .map(photo -> PhotoResponseDto.builder()
-                        .photoId(photo.getPhotoId())
-                        .imageUrl(photo.getImageUrl())
-                        .isPrivate(photo.isPrivate())
-                        .latitude(photo.getLatitude())
-                        .longitude(photo.getLongitude())
-                        .createdAt(photo.getCreatedAt())
-                        .fileName(photo.getFileName())
-                        .build()
-                )
+                .map(PhotoResponseDto::fromEntity)
                 .toList();
     }
 
@@ -97,8 +87,8 @@ public class PhotoService {
         photoRepository.deleteByPhotoId(photoId);
     }
 
-    public List<PhotoResponseDto> getPhotosByUserAndTag(Long userId, Long tagId) {
-        List<Photo> photos = photoTagRepository.findPhotosByUserIdAndTagId(userId, tagId);
+    public List<PhotoResponseDto> getPhotosByUserAndTag(User user, Long tagId) {
+        List<Photo> photos = photoTagRepository.findPhotosByUserIdAndTagId(user.getUserId(), tagId);
         return photos.stream()
                 .map(PhotoResponseDto::fromEntity)
                 .collect(Collectors.toList());

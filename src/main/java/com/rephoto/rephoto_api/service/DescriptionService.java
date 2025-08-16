@@ -100,15 +100,5 @@ public class DescriptionService {
             }
     }
 
-    @Async
-    public void generateDescriptionByAiAsync() {
-        log.info("[DESC-AUTO] 배치 커밋 후 자동 설명 생성 시작");
-        try {
-            generateDescriptionByAi(); // 네가 이미 작성한 메서드 그대로 호출
-        } catch (Exception e) {
-            log.error("[DESC-AUTO] 자동 설명 생성 실패", e);
-        }
-        log.info("[DESC-AUTO] 자동 설명 생성 종료");
-    }
 }
 

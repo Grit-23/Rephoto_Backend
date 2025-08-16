@@ -49,16 +49,12 @@ public class PhotoService {
 
         descriptionRepository.saveAll(descriptions);
 
+
+        // 사진 등록 후 자동으로 ai에 설명 생성 요청
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    // 비동기 원하면 @Async 메서드 호출
-                    descriptionService.generateDescriptionByAi();
-                }
             });
         } else {
-            // 트랜잭션이 없으면 그냥 바로 실행(최후의 안전장치)
             descriptionService.generateDescriptionByAi();
         }
     }

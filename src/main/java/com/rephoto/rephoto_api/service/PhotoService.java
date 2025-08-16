@@ -15,6 +15,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +30,7 @@ public class PhotoService {
     private final PhotoRepository photoRepository;
     private final PhotoTagRepository photoTagRepository;
     private final DescriptionRepository descriptionRepository;
+    private final DescriptionService descriptionService;
 
     public void savePhotos(List<PhotoRequestDto> dtos, User user) {
         List<Photo> photos = dtos.stream()
@@ -45,6 +48,15 @@ public class PhotoService {
                 .toList();
 
         descriptionRepository.saveAll(descriptions);
+
+
+        // 사진 등록 후 자동으로 ai에 설명 생성 요청
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            });
+        } else {
+            descriptionService.generateDescriptionByAi();
+        }
     }
 
     /*public void saveIncrementalPhotos(PhotoSyncRequestDto request) {

@@ -10,6 +10,7 @@ import com.rephoto.rephoto_api.repository.DescriptionRepository;
 import com.rephoto.rephoto_api.repository.PhotoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,5 +99,6 @@ public class DescriptionService {
                 }
             }
     }
+
 }
 

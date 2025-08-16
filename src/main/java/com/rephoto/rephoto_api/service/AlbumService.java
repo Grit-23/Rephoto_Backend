@@ -32,9 +32,9 @@ public class AlbumService {
 
 
     @Transactional(readOnly = true)
-    public List<AlbumResponseDto> getAllAlbums(Long userId) {
+    public List<AlbumResponseDto> getAllAlbums(User user) {
 
-        List<Album> albums = albumRepository.findByUser_UserId(userId);
+        List<Album> albums = albumRepository.findByUser_UserId(user.getUserId());
 
         if (albums == null || albums.isEmpty()) {
             throw new CustomException(ErrorCode.ALBUM_NOT_FOUND);
@@ -46,8 +46,8 @@ public class AlbumService {
     }
 
     @Transactional(readOnly = true)
-    public AlbumResponseDto getAlbumBySearch(Long userId, String tag) {
-        Album album = albumRepository.findByUser_UserIdAndTag_TagName(userId, tag)
+    public AlbumResponseDto getAlbumBySearch(User user, String tag) {
+        Album album = albumRepository.findByUser_UserIdAndTag_TagName(user.getUserId(), tag)
                 .orElseThrow(() -> new CustomException(ErrorCode.ALBUM_NOT_FOUND));
         return AlbumResponseDto.fromEntity(album);
     }

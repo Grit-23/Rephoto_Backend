@@ -41,6 +41,9 @@ public class PhotoResponseDto {
     @Schema(description = "사진 태그 모음", example = "(바다,하늘)")
     private List<String> tags;
 
+    @Schema(description = "AI 생성 설명 (없으면 미포함)", example = "서울의 밤 풍경.", nullable = true)
+    private String description;
+
     public static PhotoResponseDto fromEntity(Photo photo) {
         return PhotoResponseDto.builder()
                 .photoId(photo.getPhotoId())
@@ -53,6 +56,10 @@ public class PhotoResponseDto {
                 .tags(photo.getPhotoTags().stream()
                         .map(photoTag -> photoTag.getTag().getTagName()) // ✅ Tag 엔티티에서 tagName만 추출
                         .toList())
+                .description(
+                        photo.getDescription() != null
+                                ? photo.getDescription().getDescription()
+                                : null)
                 .build(); // 필요한 경우 latitude 등도 매핑 가능
     }
 }

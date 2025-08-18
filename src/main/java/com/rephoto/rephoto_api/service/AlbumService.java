@@ -33,7 +33,7 @@ public class AlbumService {
     //userId + tagName 기준으로 현재 매핑 개수로 판단하게
     // 그 태그에 사진 10개 이상인데 + 현재 앨범 없으면 -> 앨범 생성
     // 그 태그에 사진 10개 미만인데 + 현재 앨범 있으면 -> 앨범 삭제(태그 수정하거나 삭제하는 경우에 해당)
-    private static final long THRESHOLD = 10L;
+    private static final long THRESHOLD = 3L;
 
 
     @Transactional(readOnly = true)

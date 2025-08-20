@@ -41,5 +41,7 @@ public interface PhotoTagRepository extends JpaRepository<PhotoTag, Long> {
     // id 넘기는 걸로 변경
     long countByPhoto_User_UserIdAndTag_TagId(Long userId, Long tagId);
 
+    void deleteByPhoto_PhotoId(Long photoId);
+
 }
 

@@ -2,6 +2,7 @@ package com.rephoto.rephoto_api.service;
 
 import com.rephoto.rephoto_api.domain.Description;
 import com.rephoto.rephoto_api.domain.Photo;
+import com.rephoto.rephoto_api.domain.PhotoTag;
 import com.rephoto.rephoto_api.domain.User;
 import com.rephoto.rephoto_api.dto.PhotoBatchRequestDto;
 import com.rephoto.rephoto_api.dto.PhotoRequestDto;
@@ -31,6 +32,7 @@ public class PhotoService {
     private final PhotoTagRepository photoTagRepository;
     private final DescriptionRepository descriptionRepository;
     private final DescriptionService descriptionService;
+    private final AlbumService albumService;
 
     public void savePhotos(List<PhotoRequestDto> dtos, User user) {
         List<Photo> photos = dtos.stream()
@@ -94,10 +96,30 @@ public class PhotoService {
     }
 
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void deletePhoto(Long photoId) {
-        photoRepository.deleteByPhotoId(photoId);
+
+        // 1) 사진 + 태그 로드
+        Photo photo = photoRepository.findByPhotoId(photoId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PHOTO_NOT_FOUND));
+
+        Long userId = photo.getUser().getUserId();
+
+        // 앨범 정리를 위해 태그 id만 확보(중복 제거)
+        List<Long> tagIds = photoTagRepository.findByPhoto(photo).stream()
+                .map(pt -> pt.getTag().getTagId())
+                .distinct()
+                .toList();
+
+        photoTagRepository.deleteByPhoto_PhotoId(photoId);
+
+        photoRepository.delete(photo);
+
+        for (Long tagId : tagIds) {
+            albumService.manageAlbumForTag(userId, tagId);
+        }
     }
+
 
     public List<PhotoResponseDto> getPhotosByUserAndTag(User user, Long tagId) {
         List<Photo> photos = photoTagRepository.findPhotosByUserIdAndTagId(user.getUserId(), tagId);

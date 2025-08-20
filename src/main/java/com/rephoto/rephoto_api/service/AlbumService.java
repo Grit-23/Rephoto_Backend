@@ -64,34 +64,24 @@ public class AlbumService {
 
     //Tag 가 10개 이상이면 앨범 생성
     @Transactional
-    public void manageAlbumForTag(Long userId, String tagName) {
+    public void manageAlbumForTag(Long userId, Long tagId) {
+        entityManager.flush(); // 변경사항 반영
 
-        // 엔티티 매니저 이용 (주입 필요)
-        entityManager.flush(); // <- 카운트/exists 전에 반영 보장
-
-        long count = photoTagRepository.countByPhoto_User_UserIdAndTag_TagName(userId, tagName);
-        boolean exists = albumRepository.existsByUser_UserIdAndTag_TagName(userId, tagName);
+        long count = photoTagRepository.countByPhoto_User_UserIdAndTag_TagId(userId, tagId);
+        boolean exists = albumRepository.existsByUser_UserIdAndTag_TagId(userId, tagId);
 
         if (count >= THRESHOLD && !exists) {
-
-            // 1) tagName -> Tag 조회
-            Tag tag = tagRepository.findByTagName(tagName)
-                    .orElseThrow(() -> new CustomException(ErrorCode.TAG_NOT_FOUND));
-
-            // 2) user
             User user = userRepository.getReferenceById(userId);
+            Tag tag = tagRepository.getReferenceById(tagId);
 
-            // 3) 앨범 생성 -> 연관관계 해결하고
             Album album = new Album();
             album.setUser(user);
             album.setTag(tag);
-
             albumRepository.save(album);
-
         }
 
         if (count < THRESHOLD && exists) {
-            albumRepository.deleteByUser_UserIdAndTag_TagName(userId, tagName);
+            albumRepository.deleteByUser_UserIdAndTag_TagId(userId, tagId);
         }
     }
 }

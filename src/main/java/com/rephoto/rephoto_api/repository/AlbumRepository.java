@@ -22,6 +22,9 @@ public interface AlbumRepository extends JpaRepository<Album, AlbumId> {
     //현재 그 tag 의 앨범이 존재하는지
     boolean existsByUser_UserIdAndTag_TagName(Long userId, String tagName);
 
+    boolean existsByUser_UserIdAndTag_TagId(Long userId, Long tagId);
+    void deleteByUser_UserIdAndTag_TagId(Long userId, Long tagId);
+
     //
 
 }

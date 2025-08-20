@@ -33,9 +33,13 @@ public interface PhotoTagRepository extends JpaRepository<PhotoTag, Long> {
 
     boolean existsByPhotoAndTag(Photo photo, Tag tag);
 
-    // userId + tagName 조합의 사진-태그 매핑 개수
+    // userId + tagName 조합의 사진-태그 매핑 개수-> 오류 나서 안쓰는걸로
     long countByPhoto_User_UserIdAndTag_TagName(Long userId, String tagName);
 
     List<PhotoTag> findByPhoto(Photo photo);
+
+    // id 넘기는 걸로 변경
+    long countByPhoto_User_UserIdAndTag_TagId(Long userId, Long tagId);
+
 }
 

@@ -12,6 +12,7 @@ import com.rephoto.rephoto_api.repository.PhotoTagRepository;
 import com.rephoto.rephoto_api.repository.TagRepository;
 import com.rephoto.rephoto_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,8 +77,7 @@ public class TagService {
 
         PhotoTag saved = photoTagRepository.save(new PhotoTag(photo, tag));
         // 앨범 반영
-        albumService.manageAlbumForTag(uid, norm);
-
+        albumService.manageAlbumForTag(uid, tag.getTagId());
         return TagResponseDto.of(saved);
     }
 
@@ -97,7 +97,7 @@ public class TagService {
 
         photoTagRepository.delete(mapping);
         // 앨범 반영
-        albumService.manageAlbumForTag(uid, tag.getTagName());
+        albumService.manageAlbumForTag(uid, tag.getTagId());
     }
 
     // [삭제] photoTagId
@@ -113,7 +113,7 @@ public class TagService {
         String tagName = mapping.getTag().getTagName();
 
         photoTagRepository.delete(mapping);
-        albumService.manageAlbumForTag(uid, tagName);
+        albumService.manageAlbumForTag(uid, mapping.getTag().getTagId());
     }
 
     // [수정/교체] photoTagId 기준
@@ -127,6 +127,7 @@ public class TagService {
         assertOwner(uid, photo);
 
         String oldTagName = mapping.getTag().getTagName();
+        Tag oldTag = mapping.getTag();
 
         String norm = (newTagName == null) ? "" : newTagName.trim();
         if (norm.isEmpty()) throw new CustomException(ErrorCode.TAG_IS_NULL);
@@ -137,14 +138,22 @@ public class TagService {
 
         // 새 태그 확보/연결
         Tag newTag = tagRepository.findByTagName(norm)
-                .orElseGet(() -> tagRepository.save(new Tag(norm)));
+                .orElseGet(() -> {
+                            try {
+                                return tagRepository.save(new Tag(norm));
+                            } catch (DataIntegrityViolationException e) {
+                                // 경쟁 상황: 이미 다른 트랜잭션이 먼저 만들었음
+                                return tagRepository.findByTagName(norm)
+                                        .orElseThrow(() -> e);
+                            }
+                        });
 
         PhotoTag newMapping = photoTagRepository.findByPhotoAndTag(photo, newTag)
                 .orElseGet(() -> photoTagRepository.save(new PhotoTag(photo, newTag)));
 
         // 앨범 반영 (감소/증가)
-        albumService.manageAlbumForTag(uid, oldTagName);
-        albumService.manageAlbumForTag(uid, norm);
+        albumService.manageAlbumForTag(uid, oldTag.getTagId());
+        albumService.manageAlbumForTag(uid, newTag.getTagId());
 
         return TagResponseDto.of(newMapping);
     }

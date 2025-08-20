@@ -6,10 +6,13 @@ import com.rephoto.rephoto_api.domain.Tag;
 import com.rephoto.rephoto_api.repository.PhotoTagRepository;
 import com.rephoto.rephoto_api.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +35,20 @@ public class TagCommandService {
                 .distinct()
                 .toList();
 
+        Map<String, Tag> tagByName = new HashMap<>();
+        for (String name : normalized) {
+            Tag tag = tagRepository.findByTagName(name)
+                    .orElseGet(() -> {
+                        try {
+                            return tagRepository.save(new Tag(name));
+                        } catch (DataIntegrityViolationException e) {
+                            // 다른 트랜잭션/쓰레드가 같은 이름으로 먼저 만든 경우
+                            return tagRepository.findByTagName(name).orElseThrow(() -> e);
+                        }
+                    });
+            tagByName.put(name, tag);
+        }
+
         //정규화한 태그명 해당 photo 에 저장(PhotoTag에)
         for (String name : normalized) {
             Tag tag = tagRepository.findByTagName(name)
@@ -42,9 +59,13 @@ public class TagCommandService {
             }
         }
 
-        // 태그별로 앨범 관리 호출 (중복 없이)
+
         Long userId = photo.getUser().getUserId();
-        normalized.forEach(n -> albumService.manageAlbumForTag(userId, n));
+        // 중복 호출 방지: tagId 기준 distinct
+        tagByName.values().stream()
+                .map(Tag::getTagId)
+                .distinct()
+                .forEach(tagId -> albumService.manageAlbumForTag(userId, tagId));
     }
 
 }
